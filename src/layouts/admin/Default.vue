@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-  import SideBarNavigation from '../admin/SideBarNavigation.vue';
+  import SideBarNavigation from '@/layouts/admin/SideBarNavigation.vue';
 </script>

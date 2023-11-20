@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
+    component: () => import('@/layouts/admin/Default.vue'),
     children: [
       {
         path: '',
@@ -12,10 +12,31 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (Home-[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import('@/views/Home.vue'),
+        component: () => import('@/views/AdminHome.vue'),
       },
     ],
   },
+  {
+    path: '/admin',
+    component: () => import('@/layouts/admin/SideBarNavigation.vue'),
+    children: [
+      {
+        path: '',
+        name: 'home-default',
+        component: () => import('@/views/AdminHome.vue')
+      },
+      {
+        path: 'account',
+        name: 'account',
+        component: () => import('@/views/AdminAccount.vue'),
+      },
+      {
+        path:'home',
+        name:'home',
+        component:()=> import('@/views/AdminHome.vue')
+      }
+    ]
+  }
 ]
 
 const router = createRouter({
