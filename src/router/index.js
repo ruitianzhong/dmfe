@@ -31,10 +31,15 @@ const routes = [
         component: () => import('@/views/AdminAccount.vue'),
       },
       {
-        path:'home',
-        name:'home',
-        component:()=> import('@/views/AdminHome.vue')
-      }
+        path: 'home',
+        name: 'home',
+        component: () => import('@/views/AdminHome.vue')
+      },
+      {
+        path: 'add-driver-info',
+        name: 'add-driver-info',
+        component: () => import('@/views/AddDriverView.vue')
+      },
     ]
   }
 ]

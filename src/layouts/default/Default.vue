@@ -1,9 +1,0 @@
-<template>
-  <v-app>
-    <side-bar-navigation/>
-  </v-app>
-</template>
-
-<script setup>
-  import SideBarNavigation from '../admin/SideBarNavigation.vue';
-</script>
