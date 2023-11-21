@@ -27,7 +27,7 @@
                         </v-list-item>
                     </template>
                     <v-list-item v-for="([title, icon, value], i) in data_query" :key="i" :title="title"
-                        :prepend-icon="icon" :value="value" active-color="green"></v-list-item>
+                        :prepend-icon="icon" :value="value" active-color="green" :to="'/admin/' + value"></v-list-item>
                 </v-list-group>
                 <v-list-group value="line-manage">
                     <template v-slot:activator="{ props }">
@@ -39,7 +39,8 @@
                 </v-list-group>
                 <v-list-item title="新增用户" prepend-icon="mdi-account-plus" value="add-user"
                     active-color="green"></v-list-item>
-                <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple" active-color="green"></v-list-item>
+                <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple"
+                    active-color="green"></v-list-item>
             </v-list>
             <template v-slot:append>
                 <div class="pa-2 text-center">
@@ -53,7 +54,7 @@
                 </div>
             </template>
         </v-navigation-drawer>
-        <v-main scrollable  style="min-height: 300px;">
+        <v-main scrollable style="min-height: 300px;">
             <div>
                 <router-view />
 
@@ -77,9 +78,8 @@ export default {
         ],
         admin_id: '709221876',
         data_query: [
-            ['司机信息', 'mdi-information', 'query-driver-info'],
-            ['司机违章', 'mdi-bus-alert', 'query-single-irregulation'],
-            ['违章统计', 'mdi-numeric', 'irregulation-statistic']
+            ['司机信息', 'mdi-information', 'driver-detail'],
+            ['违章统计', 'mdi-numeric', 'violation-statistic']
         ],
         line_manage: [
             ['管理站点', 'mdi-bus-stop', 'add-busstop'],

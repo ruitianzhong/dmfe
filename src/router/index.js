@@ -44,6 +44,11 @@ const routes = [
         path:'delete-driver',
         name:'delete-driver',
         component: () => import('@/views/DeleteDriverView.vue')
+      },
+      {
+        path:'driver-detail',
+        name:'driver-detail',
+        component:()=>import('@/views/BrowseDriverInfo.vue')
       }
     ]
   }

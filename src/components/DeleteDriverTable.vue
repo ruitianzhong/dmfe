@@ -8,18 +8,9 @@
     </v-card-title>
     <v-divider></v-divider>
     <v-data-table v-model:search="search" :loading="loading" select-strategy="single" :items="items" items-per-page="10"
-      items-per-page-text="每页显示记录数量" :headers="headers" show-select :item-value="item => `${item.did}`" v-model="selected"
+      items-per-page-text="每页显示记录数量" :headers="headers" hover show-select :item-value="item => `${item.did}`" v-model="selected"
       loading-text="数据加载中,请稍等">
-
     </v-data-table>
-    <v-snackbar v-model="snackbar">
-      <template v-slot:actions>
-        <v-btn color="blue" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-      placeholder
-    </v-snackbar>
   </v-card>
 </template>
   
