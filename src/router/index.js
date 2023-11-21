@@ -40,6 +40,11 @@ const routes = [
         name: 'add-driver-info',
         component: () => import('@/views/AddDriverView.vue')
       },
+      {
+        path:'delete-driver',
+        name:'delete-driver',
+        component: () => import('@/views/DeleteDriverView.vue')
+      }
     ]
   }
 ]

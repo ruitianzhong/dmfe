@@ -37,8 +37,9 @@
                         :title="title" :value="value" active-color="green"></v-list-item>
 
                 </v-list-group>
-                <v-list-item title="新增用戶" prepend-icon="mdi-account-plus" value="add-user"
+                <v-list-item title="新增用户" prepend-icon="mdi-account-plus" value="add-user"
                     active-color="green"></v-list-item>
+                <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple" active-color="green"></v-list-item>
             </v-list>
             <template v-slot:append>
                 <div class="pa-2 text-center">
@@ -52,7 +53,7 @@
                 </div>
             </template>
         </v-navigation-drawer>
-        <v-main scrollable class="align-center" style="min-height: 300px;">
+        <v-main scrollable  style="min-height: 300px;">
             <div>
                 <router-view />
 
@@ -83,7 +84,7 @@ export default {
         line_manage: [
             ['管理站点', 'mdi-bus-stop', 'add-busstop'],
             ['线路修改', 'mdi-road-variant', 'add-new-line'],
-        ]
+        ],
     }),
     components: { RouterView },
 
