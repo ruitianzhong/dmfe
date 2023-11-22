@@ -54,6 +54,11 @@ const routes = [
         path: 'add-violation',
         name: 'add-violation',
         component: () => import('@/views/AddViolation.vue')
+      },
+      {
+        path: 'update-driver',
+        name: 'update-driver',
+        component: () => import('@/views/UpdateDriverView.vue')
       }
     ]
   }
