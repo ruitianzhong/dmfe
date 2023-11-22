@@ -74,7 +74,7 @@ export default {
             ['录入新司机信息', 'mdi-plus-outline', 'add-driver-info'],
             ['更新司机信息', 'mdi-update', 'update-driver'],
             ['删除司机', 'mdi-delete', 'delete-driver'],
-            ['录入违章信息', 'mdi-alert-octagon', 'add-irregulation'],
+            ['录入违章信息', 'mdi-alert-octagon', 'add-violation'],
         ],
         admin_id: '709221876',
         data_query: [

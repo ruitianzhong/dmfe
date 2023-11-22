@@ -41,14 +41,19 @@ const routes = [
         component: () => import('@/views/AddDriverView.vue')
       },
       {
-        path:'delete-driver',
-        name:'delete-driver',
+        path: 'delete-driver',
+        name: 'delete-driver',
         component: () => import('@/views/DeleteDriverView.vue')
       },
       {
-        path:'driver-detail',
-        name:'driver-detail',
-        component:()=>import('@/views/BrowseDriverInfo.vue')
+        path: 'driver-detail',
+        name: 'driver-detail',
+        component: () => import('@/views/BrowseDriverInfo.vue')
+      },
+      {
+        path: 'add-violation',
+        name: 'add-violation',
+        component: () => import('@/views/AddViolation.vue')
       }
     ]
   }

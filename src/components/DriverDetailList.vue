@@ -21,7 +21,7 @@
 </template>
     
 <script>
-import DetailDialog from './DetailDialog.vue';
+import DetailDialog from './DriverDetailDialog.vue';
 export default {
 
     components: { DetailDialog },
