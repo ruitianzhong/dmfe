@@ -142,6 +142,10 @@ export default {
             date: null,
             choosedBus:null,
             choosedStop:null,
+            line:{
+                name:'1路',
+                lno:1
+            }
         }
     },
 
@@ -157,14 +161,15 @@ export default {
 
         },
         violationInfo(){
-           if (this.date!=null&&this.choosedDriver != null && this.choosedBus != null && this.choosedStop != null && this.choosedType != null) {
+            if (this.date != null && this.choosedDriver != null && this.choosedBus != null && this.choosedStop != null && this.choosedType != null) {
                 return {
                     did: this.choosedDriver.did,
                     name: this.choosedDriver.name,
-                    choosedBus: this.choosedBus.bno,
-                    choosedStop: this.choosedStop.sno,
+                    choosedBus: this.choosedBus,
+                    choosedStop: this.choosedStop,
                     date: this.date,
-                    choosedType: this.choosedType
+                    choosedType: this.choosedType,
+                    line:this.line,
                 }
             } else {
                 return {
