@@ -1,6 +1,7 @@
-<template>
-<a>placeholder for Login.vue</a>
+<template>  
+    <LoginForm></LoginForm>
 </template>
 
-<script>
+<script setup>
+import LoginForm from '@/components/LoginForm.vue';
 </script>

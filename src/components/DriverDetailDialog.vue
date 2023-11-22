@@ -27,18 +27,18 @@
                     <span class="py-5 font-weight-black">司机 {{ name }} 违章记录查询</span>
                     <v-divider></v-divider>
                     <br />
-                    <VueDatePicker v-model="date" range  placeholder="请选择查询的范围" :max-date="new Date()" />
-                    <br/>
+                    <VueDatePicker v-model="date" range placeholder="请选择查询的范围" :max-date="new Date()" />
+                    <br />
                     <center>
-                    <v-btn type="submit" prepend-icon="mdi-magnify"  class="text-none align-center "
-                    color="indigo-darken-3" size="small" variant="text" >
-                    查询
-                </v-btn></center>
-                <br/>
-                <v-data-table  :items="violation_items" items-per-page="5"
-      items-per-page-text="每页显示记录数量" :headers="violation_headers" hover :item-value="item => `${item.time}`" 
-      loading-text="数据加载中,请稍等">
-    </v-data-table>
+                        <v-btn type="submit" prepend-icon="mdi-magnify" class="text-none align-center "
+                            color="indigo-darken-3" size="small" variant="text">
+                            查询
+                        </v-btn>
+                    </center>
+                    <br />
+                    <v-data-table :items="violation_items" items-per-page="5" items-per-page-text="每页显示记录数量"
+                        :headers="violation_headers" hover :item-value="item => `${item.time}`" loading-text="数据加载中,请稍等">
+                    </v-data-table>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -77,14 +77,14 @@ export default {
                     align: 'end'
                 }
             ],
-            violation_items:[
+            violation_items: [
                 {
-                    time:'2023-03-03',
-                    type:'闯红灯',
+                    time: '2023-03-03',
+                    type: '闯红灯',
                 },
                 {
-                    time:'2023-02-02',
-                    type:'不礼让行人'
+                    time: '2023-02-02',
+                    type: '不礼让行人'
                 }
             ]
         }

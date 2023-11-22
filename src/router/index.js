@@ -17,6 +17,10 @@ const routes = [
     ],
   },
   {
+    path: '/login',
+    component: () => import('@/views/LoginView.vue')
+  },
+  {
     path: '/admin',
     component: () => import('@/layouts/admin/SideBarNavigation.vue'),
     children: [
@@ -59,6 +63,11 @@ const routes = [
         path: 'update-driver',
         name: 'update-driver',
         component: () => import('@/views/UpdateDriverView.vue')
+      },
+      {
+        path:'violation-statistic',
+        name:'violation-statistic',
+        component: () => import('@/views/ViolationStatView.vue')
       }
     ]
   }
