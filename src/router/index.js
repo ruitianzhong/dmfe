@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '/default',
     component: () => import('@/layouts/admin/Default.vue'),
     children: [
       {
@@ -15,6 +15,10 @@ const routes = [
         component: () => import('@/views/AdminHome.vue'),
       },
     ],
+  },
+  {
+    path: '/',
+    component: () => import('@/views/HomePage.vue')
   },
   {
     path: '/login',
@@ -65,8 +69,8 @@ const routes = [
         component: () => import('@/views/UpdateDriverView.vue')
       },
       {
-        path:'violation-statistic',
-        name:'violation-statistic',
+        path: 'violation-statistic',
+        name: 'violation-statistic',
         component: () => import('@/views/ViolationStatView.vue')
       }
     ]
