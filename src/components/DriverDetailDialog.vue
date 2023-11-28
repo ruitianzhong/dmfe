@@ -1,5 +1,4 @@
 <template>
-    <v-row justify="center">
         <v-dialog v-model="dialog" width="800">
             <template v-slot:activator="{ props }">
                 <v-btn color="transparent" rounded="false" elevation="0" v-bind="props" icon="mdi-dots-horizontal"
@@ -48,7 +47,6 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </v-row>
 </template>
   
 <script>

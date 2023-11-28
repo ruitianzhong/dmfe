@@ -41,6 +41,8 @@
                     active-color="green"></v-list-item>
                 <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple"
                     active-color="green" to="/admin/bus-management"></v-list-item>
+                <v-list-item title="车队管理" value="fleet-management" prepend-icon="mdi-cog"
+                active-color="green" to="/admin/fleet-management"></v-list-item>
             </v-list>
             <template v-slot:append>
                 <div class="pa-2 text-center">

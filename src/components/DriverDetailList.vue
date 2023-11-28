@@ -71,7 +71,7 @@ export default {
                 {
                     title: '更多',
                     key: 'detail',
-                    align: 'center'
+                    align: 'end'
                 }
 
             ],

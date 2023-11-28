@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="0" max-width="500" class="mx-auto mt-10 pt-5" scrollable>
+    <v-card elevation="0" max-width="500" class="mx-auto mt-2" scrollable>
         <v-card-title class="py-5 font-weight-black">输入新司机的信息</v-card-title>
         <v-card-text>你好，请按照相关要求填写司机信息</v-card-text>
         <v-card-text>
@@ -12,6 +12,16 @@
                 <v-text-field v-model="did" density="compact" :counter="10" label="司机工号" hint="工号为5-10个数字" required
                     :rules="didRules" height="10" variant="outlined">
                 </v-text-field>
+                <div class="text-subtitle-2 font-weight-black mb-1">车队编号</div>
+                <v-combobox density="compact" variant="outlined" :items="fleetsItems" :hide-no-data="false" v-model="fleet">
+                    <template v-slot:no-data>
+                        <v-list-item>
+                            <v-list-item-title>
+                                暂无数据
+                            </v-list-item-title>
+                        </v-list-item>
+                    </template>
+                </v-combobox>
                 <v-row>
                     <v-col>
                         <div class="text-subtitle-2 font-weight-black mb-1">性别</div>

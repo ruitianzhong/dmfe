@@ -87,6 +87,10 @@ const routes = [
         path:"manage-line",
         name:"manage-line",
         component:()=>import('@/components/ManageLine.vue')
+      },
+      {
+        path:"fleet-management",
+        component:()=>import('@/components/ManageFleet.vue')
       }
     ]
   }
