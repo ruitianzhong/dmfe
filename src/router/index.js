@@ -72,6 +72,21 @@ const routes = [
         path: 'violation-statistic',
         name: 'violation-statistic',
         component: () => import('@/views/ViolationStatView.vue')
+      },
+      {
+        path: "bus-management",
+        name:"bus-management",
+        component: () => import('@/views/BusManagementPage.vue')
+      },
+      {
+        path:"manage-bus-stop",
+        name:"manage-bus-stop",
+        component:()=> import('@/components/ManageBusStop.vue')
+      },
+      {
+        path:"manage-line",
+        name:"manage-line",
+        component:()=>import('@/components/ManageLine.vue')
       }
     ]
   }

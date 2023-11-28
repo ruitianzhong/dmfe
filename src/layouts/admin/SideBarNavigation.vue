@@ -34,13 +34,13 @@
                         <v-list-item v-bind="props" title="线路管理" prepend-icon="mdi-highway"></v-list-item>
                     </template>
                     <v-list-item v-for="([title, icon, value], i) in line_manage" :key="i" :prepend-icon="icon"
-                        :title="title" :value="value" active-color="green"></v-list-item>
+                        :title="title" :value="value" active-color="green" :to="value"></v-list-item>
 
                 </v-list-group>
                 <v-list-item title="新增用户" prepend-icon="mdi-account-plus" value="add-user"
                     active-color="green"></v-list-item>
                 <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple"
-                    active-color="green"></v-list-item>
+                    active-color="green" to="/admin/bus-management"></v-list-item>
             </v-list>
             <template v-slot:append>
                 <div class="pa-2 text-center">
@@ -82,8 +82,8 @@ export default {
             ['违章统计', 'mdi-numeric', 'violation-statistic']
         ],
         line_manage: [
-            ['管理站点', 'mdi-bus-stop', 'add-busstop'],
-            ['线路修改', 'mdi-road-variant', 'add-new-line'],
+            ['管理站点', 'mdi-bus-stop', 'manage-bus-stop'],
+            ['线路修改', 'mdi-road-variant', 'manage-line'],
         ],
     }),
     components: { RouterView },
