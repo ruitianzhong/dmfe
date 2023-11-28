@@ -59,6 +59,12 @@
 export default {
     data() {
         return {
+            alert: true,
+            reply: {
+                type: 'success',
+                title: 'title',
+                msg: 'success!',
+            },
             dialog: false,
             bus_id: null,
 
