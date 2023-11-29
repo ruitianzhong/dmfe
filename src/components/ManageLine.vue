@@ -16,6 +16,9 @@
                     <LineInfoDialog :line_id="item.line_id"></LineInfoDialog>
                 </div>
             </template>
+            <template v-slot:item.modify="{ item }">
+                <LineCaptainDialog :line_id="item.line_id"></LineCaptainDialog>
+            </template>
 
         </v-data-table>
     </v-card>
@@ -24,10 +27,12 @@
 <script>
 import AddNewLineDialog from '@/components/AddNewLineDialog.vue';
 import LineInfoDialog from '@/components/LineInfoDialog.vue'
+import LineCaptainDialog from './LineCaptainDialog.vue';
 export default {
     components: {
         AddNewLineDialog,
         LineInfoDialog,
+        LineCaptainDialog,
     },
     data() {
         return {
@@ -57,6 +62,11 @@ export default {
                 {
                     title: '所属车队',
                     key: 'fleet_id',
+                },
+                {
+                    title: '更新',
+                    key: 'modify',
+
                 },
                 {
                     title: '更多',
