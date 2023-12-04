@@ -39,14 +39,14 @@
                 </v-list-group>
                 <v-list-item title="新增用户" prepend-icon="mdi-account-plus" value="add-user"
                     active-color="green"></v-list-item>
-                <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple"
-                    active-color="green" to="/admin/bus-management"></v-list-item>
-                <v-list-item title="车队管理" value="fleet-management" prepend-icon="mdi-cog"
-                active-color="green" to="/admin/fleet-management"></v-list-item>
+                <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple" active-color="green"
+                    to="/admin/bus-management"></v-list-item>
+                <v-list-item title="车队管理" value="fleet-management" prepend-icon="mdi-cog" active-color="green"
+                    to="/admin/fleet-management"></v-list-item>
             </v-list>
             <template v-slot:append>
                 <div class="pa-2 text-center">
-                    <v-btn variant="text">
+                    <v-btn variant="text" :loading="logout_loading" @click="logout()">
                         退出登录
                         <template v-slot:prepend>
                             <v-icon icon="mdi-logout" color="red">
@@ -69,7 +69,8 @@
 
 <script>
 import { RouterView } from 'vue-router';
-
+import { logout } from '@/api/api'
+import router from '@/router'
 export default {
     data: () => ({
         driver_management: [
@@ -87,11 +88,29 @@ export default {
             ['管理站点', 'mdi-bus-stop', 'manage-bus-stop'],
             ['线路修改', 'mdi-road-variant', 'manage-line'],
         ],
+        logout_loading: false,
     }),
     components: { RouterView },
 
     created() {
 
+    },
+    methods: {
+        async logout() {
+
+            this.logout_loading = true;
+            try {
+                const { data } = await logout()
+                if (data.code == "200") {
+                    this.logout_loading = false;
+                    router.push({ path: '/' });
+                }
+
+            } catch (err) {
+                console.log(err)
+            }
+            this.logout_loading = false;
+        }
     }
 }
 </script>

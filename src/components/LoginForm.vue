@@ -1,7 +1,7 @@
 <template>
     <v-img class="mt-10 mb-3" height="50" src="@/assets/logo-large.png" />
     <h2 class="text-center">登录</h2>
-    <v-card rounded  variant="text" max-width="350" class="mx-auto  mt-1
+    <v-card rounded variant="text" max-width="350" class="mx-auto  mt-1
  rounded-lg
 " scrollable>
         <v-card-text>
@@ -14,42 +14,54 @@
                     density="compact" :rules="userPasswordRules"></v-text-field>
                 <v-btn :loading="loading" type="submit" block class="mt-2" text="登录" color="#008000"
                     density="default"></v-btn>
+                <v-alert v-model="alert" type="error" class="mt-5 md-5" variant="outlined" closable density="comfortable"
+                    text="该用户不存在或用户密码错误，请重试"></v-alert>
             </v-form>
         </v-card-text>
     </v-card>
 </template>
 <script>
+import { login } from '@/api/api';
+import router from '@/router';
 export default {
     data: vm => ({
         loading: false,
-        userIdRules: [value => vm.checkApi(value)],
+        userIdRules: [value => vm.checkId(value)],
         userPasswordRules: [value => vm.checkPassword(value)],
         timeout: null,
         userId: '',
         password: '',
+        alert: false,
     }),
 
     methods: {
         async submit(event) {
             this.loading = true
-
-            const results = await event
-
+            await event;
+            if (this.password == '' || this.userId == '') {
+                this.loading = false
+                return
+            }
+            const req = {
+                password: this.password,
+                username: this.userId,
+            };
+            const { data } = await login(req);
+            if (data.code == "100") {
+                this.alert = true;
+                this.loading = false;
+                return
+            }
+            router.push({ path: "/admin/home" })
             this.loading = false
+            this.alert = false
 
-            alert(JSON.stringify(results, null, 2))
         },
-        async checkApi(userName) {
-            return new Promise(resolve => {
-                clearTimeout(this.timeout)
-
-                this.timeout = setTimeout(() => {
-                    if (!userName) return resolve('Please enter a user name.')
-                    if (userName === 'johnleider') return resolve('User name already taken. Please try another one.')
-
-                    return resolve(true)
-                }, 1000)
-            })
+        checkId(userName) {
+            if (!userName) {
+                return '请输入用户名'
+            }
+            return true;
         },
         checkPassword(password) {
             if (password != '') return true

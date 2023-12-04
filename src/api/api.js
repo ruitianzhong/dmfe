@@ -2,15 +2,17 @@ import axios from "axios";
 
 
 export const login = (form) => {
-    return axios.post({
+    return axios.request({
         url: "/auth/login",
+        method: "post",
         data: form,
     })
 }
 
 export const logout = () => {
-    return axios.post({
+    return axios.request({
         url: "/auth/logout",
+        method: "post",
     })
 }
 
@@ -148,22 +150,25 @@ export const modifyDriverInfo = (param) => {
 }
 
 export const addViolationRecord = (param) => {
-    return axios.post({
+    return axios.request({
         url: "/api/violation/add-violation",
         data: param,
+        method: "post"
     })
 }
 
 export const setFleetCaptain = (param) => {
-    return axios.post({
+    return axios.request({
         url: "/api/line/set-fleet-captain",
         data: param,
+        method: "post"
     })
 }
 
 export const setLineCaptain = (param) => {
-    return axios.post({
+    return axios.request({
         url: "/api/line/set-line-captain",
         data: param,
+        method: "post"
     })
 }
