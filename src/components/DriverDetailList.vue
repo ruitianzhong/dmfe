@@ -9,11 +9,11 @@
                 hide-details variant="solo-filled"></v-text-field>
         </v-card-title>
         <v-divider></v-divider>
-        <v-data-table v-model:search="search" :loading="false" :items="items" items-per-page="10"
-            items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等" >
+        <v-data-table v-model:search="search" :loading="loading" :items="items" items-per-page="10"
+            items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
-                    <DetailDialog :did="item.did" :name="item.name"></DetailDialog>
+                    <DetailDialog :driver_info="item"></DetailDialog>
                 </div>
             </template>
         </v-data-table>
@@ -22,6 +22,7 @@
     
 <script>
 import DetailDialog from './DriverDetailDialog.vue';
+import { getAllDriverInfo } from '@/api/api'
 export default {
 
     components: { DetailDialog },
@@ -29,31 +30,11 @@ export default {
         return {
             loading: true,
             search: '',
-            items: [
-                {
-                    did: '00001',
-                    name: 'Alice',
-                    gender: '女',
-                    year: '1972',
-                },
-                {
-                    did: '00002',
-                    name: 'Bob',
-                    gender: '男',
-                    year: '1980'
-                },
-                {
-                    did: '00003',
-                    name: 'Cindy',
-                    gender: '女',
-                    year: '1971'
-                },
-
-            ],
+            items: [],
             headers: [
                 {
                     title: '工号',
-                    key: 'did',
+                    key: 'driver_id',
                     align: 'start',
                 },
                 {
@@ -75,9 +56,29 @@ export default {
                 }
 
             ],
-            selected: [],
         }
     },
+    methods: {
+        async getItems() {
+            try {
+                this.loading = true;
+                console.log("test")
+                const { data } = await getAllDriverInfo();
+                this.items = data.driver_info;
+                this.loading = false;
+            } catch (err) {
+                console.log(err);
+            }
+
+        }
+    },
+    mounted() {
+        this.getItems();
+    },
+    unmounted() {
+        this.items = null;
+        this.loading = false;
+    }
 }
 </script>
   

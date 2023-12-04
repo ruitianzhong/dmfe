@@ -14,6 +14,13 @@ export const logout = () => {
     })
 }
 
+export const getAllDriverInfo = () => {
+    return axios.request({
+        url: "/api/driver/get-all-driver-info",
+        method: "get",
+    })
+}
+
 export const getAllStops = () => {
     return axios.request({
         url: "/api/line/get-all-stops",

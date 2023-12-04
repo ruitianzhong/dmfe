@@ -1,69 +1,70 @@
 <template>
-        <v-dialog v-model="dialog" width="800">
-            <template v-slot:activator="{ props }">
-                <v-btn color="transparent" rounded="false" elevation="0" v-bind="props" icon="mdi-dots-horizontal"
-                    density="compact"> </v-btn>
-            </template>
-            <v-card>
-                <v-card-title>
-                    <span class="py-5 font-weight-black">司机 {{ name }} 的信息</span>
-                </v-card-title>
+    <v-dialog v-model="dialog" width="800">
+        <template v-slot:activator="{ props }">
+            <v-btn color="transparent" rounded="false" elevation="0" v-bind="props" icon="mdi-dots-horizontal"
+                density="compact"> </v-btn>
+        </template>
+        <v-card>
+            <v-card-title>
+                <span class="py-5 font-weight-black">司机 {{ driver_info.name }} 的信息</span>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :title="driver_info.name"
+                    :subtitle="'工号 ' + driver_info.driver_id" lines="two" append-icon="mdi-bus-side">
+                </v-list-item>
+                <v-list-item prepend-icon="mdi-calendar" title="出生年份" :subtitle="driver_info.year"></v-list-item>
+
+                <v-list-item prepend-icon="mdi-gender-male-female" title="性别" :subtitle="driver_info.gender"></v-list-item>
+                <v-list-item prepend-icon="mdi-counter" title="所属车队编号" :subtitle="driver_info.fleet_id"></v-list-item>
+
+                <v-skeleton-loader v-if="loading" type="list-item-two-line"></v-skeleton-loader>
+                <v-list-item prepend-icon="mdi-account-box" title="车队队长" v-else
+                    :subtitle="this.fleet_captain.driver_id != '' ? this.fleet_captain.name + ' ' + this.fleet_captain.driver_id : '该车队暂时没有队长'"></v-list-item>
+                <v-list-item prepend-icon="mdi-road" title="路线"
+                    :subtitle="driver_info.line_id != '' ? driver_info.line_id : '暂未分配路线'"></v-list-item>
+
+                <br />
+                <span class="py-5 font-weight-black">司机 {{ name }} 违章记录查询</span>
                 <v-divider></v-divider>
-                <v-card-text>
-                    <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :title="name"
-                        :subtitle="'工号 ' + did" lines="two" append-icon="mdi-bus-side">
-                    </v-list-item>
-                    <v-list-item prepend-icon="mdi-calendar" title="出生年份" :subtitle="year"></v-list-item>
-                    <v-list-item prepend-icon="mdi-gender-male-female" title="性别" :subtitle="gender"></v-list-item>
-                    <v-list-item prepend-icon="mdi-counter" title="所属车队编号"
-                        :subtitle="fleet_id ? fleet_id : '暂未分配车队'"></v-list-item>
-                    <v-list-item prepend-icon="mdi-account-box" title="车队队长" v-if="fleet_id != undefined"
-                        :subtitle="fleet_leader ? fleet_leader : '该车队暂时没有队长'"></v-list-item>
-                    <v-list-item prepend-icon="mdi-road" title="路线" :subtitle="line ? line : '暂未分配路线'"></v-list-item>
-
-
-                    <br />
-                    <span class="py-5 font-weight-black">司机 {{ name }} 违章记录查询</span>
-                    <v-divider></v-divider>
-                    <br />
-                    <VueDatePicker v-model="date" range placeholder="请选择查询的范围" :max-date="new Date()" />
-                    <br />
-                    <center>
-                        <v-btn type="submit" prepend-icon="mdi-magnify" class="text-none align-center "
-                            color="indigo-darken-3" size="small" variant="text">
-                            查询
-                        </v-btn>
-                    </center>
-                    <br />
-                    <v-data-table :items="violation_items" items-per-page="5" items-per-page-text="每页显示记录数量"
-                        :headers="violation_headers" hover :item-value="item => `${item.time}`" loading-text="数据加载中,请稍等">
-                    </v-data-table>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green-darken-1" variant="text" @click="dialog = false">
-                        关闭
+                <br />
+                <VueDatePicker v-model="date" range placeholder="请选择查询的范围" :max-date="new Date()" />
+                <br />
+                <center>
+                    <v-btn type="submit" prepend-icon="mdi-magnify" class="text-none align-center " color="indigo-darken-3"
+                        size="small" variant="text" @click="getViolationRecords()"
+                        :disabled="date == null || date[0] == undefined && date[1] == undefined">
+                        查询
                     </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+                </center>
+                <br />
+                <v-data-table v-if="show_table" :items="violation_items" items-per-page="5" items-per-page-text="每页显示记录数量"
+                    :headers="violation_headers" hover :item-value="item => `${item.time}`" loading-text="数据加载中,请稍等"
+                    no-data-text="暂无数据" :loading="query_loading">
+                </v-data-table>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                    关闭
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
   
 <script>
+import { getLineCaptainByDriverId, violationByTimeRangeDriverId } from '@/api/api';
 export default {
-    props: ['did', 'name'],
+    props: ['driver_info'],
     data() {
         return {
+            loading: true,
+            query_loading: false,
             dialog: false,
-            year: '1990',
-            gender: '男',
-            fleet_id: '12345',
-            fleet_leader: 'Alice',
-            start: null,
-            end: null,
+            show_table: false,
             date: null,
             violation_headers: [
-
                 {
                     title: '时间',
                     key: 'time',
@@ -71,23 +72,65 @@ export default {
                 },
                 {
                     title: '违章种类',
-                    key: 'type',
+                    key: 'violation_type_id',
                     align: 'end'
                 }
             ],
-            violation_items: [
-                {
-                    time: '2023-03-03',
-                    type: '闯红灯',
-                },
-                {
-                    time: '2023-02-02',
-                    type: '不礼让行人'
-                }
-            ]
+            violation_items: [],
+            fleet_captain: {
+                driver_id: '',
+                name: '',
+            }
         }
     },
     onMounted() {
+    },
+    watch: {
+        dialog(newDialog) {
+            if (newDialog == true) {
+                this.loading = true;
+                this.getLineCaptain();
+                this.loading = false;
+            }
+        }
+    },
+    methods: {
+        async getLineCaptain() {
+            try {
+                const param = "driver_id=" + this.driver_info.driver_id;
+                const { data } = await getLineCaptainByDriverId(param);
+                this.fleet_captain.driver_id = data.driver_id
+                this.fleet_captain.name = data.name
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async getViolationRecords() {
+            try {
+                this.query_loading = true
+                this.show_table = true
+                if (this.date == null || this.date[0] == undefined || this.date[1] == undefined) {
+                    return
+                }
+                const start = Date.parse(this.date[0]) / 1000, end = Date.parse(this.date[1]) / 1000
+                var param = "driver_id=" + this.driver_info.driver_id + '&start=' + start + '&end=' + end;
+                const { data } = await violationByTimeRangeDriverId(param);
+                var violations = data.violations;
+                for (var i = 0; violations != null && i < violations.length; i++) {
+                    var d = new Date(violations[i].time * 1000)
+                    var violation = {
+                        violation_type_id: violations[i].violation_type_id,
+                        time: d.getFullYear() + "." + d.getMonth() + '.' + d.getDay() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
+                    };
+                    this.violation_items.push(violation);
+                }
+                this.query_loading = false;
+
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
     }
 
 }
