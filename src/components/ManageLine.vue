@@ -6,11 +6,13 @@
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
             <AddNewLineDialog></AddNewLineDialog>
+            <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
+                rounded></v-btn>
             &nbsp;
         </v-card-title>
         <v-divider></v-divider>
         <v-data-table v-model:search="search" :loading="loading" :items="items" items-per-page="10"
-            items-per-page-text="每页显示记录数量" :headers="headers" hover v-model="selected" loading-text="数据加载中,请稍等">
+            items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
                     <LineInfoDialog :line_id="item.line_id"></LineInfoDialog>
@@ -28,6 +30,7 @@
 import AddNewLineDialog from '@/components/AddNewLineDialog.vue';
 import LineInfoDialog from '@/components/LineInfoDialog.vue'
 import LineCaptainDialog from './LineCaptainDialog.vue';
+import { getAllLineInfo } from '@/api/api';
 export default {
     components: {
         AddNewLineDialog,
@@ -37,22 +40,9 @@ export default {
     data() {
         return {
             loading: false,
+            refresh_loading: false,
             search: '',
-            items: [
-                {
-                    line_id: '825',
-                    fleet_id: 1
-                },
-                {
-                    line_id: '咸阳68',
-                    fleet_id: 2
-                },
-                {
-                    line_id: '27',
-                    fleet_id: '23',
-                },
-
-            ],
+            items: [],
             headers: [
                 {
                     title: '路线名',
@@ -62,6 +52,11 @@ export default {
                 {
                     title: '所属车队',
                     key: 'fleet_id',
+                },
+
+                {
+                    title: '路队长工号',
+                    key: 'driver_id'
                 },
                 {
                     title: '更新',
@@ -74,11 +69,36 @@ export default {
                     align: 'end'
                 },
             ],
-            selected: [],
-            snackBarTimeout: 20000,
-            snackbar: true,
         }
     },
+    methods: {
+        async updateLineInfo() {
+            try {
+                this.loading = true;
+                const { data } = await getAllLineInfo();
+                var arr = data.all_info;
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].driver_id == '') {
+                        arr[i].driver_id = "空缺"
+                    }
+                }
+                this.items = arr
+            }
+            catch (err) {
+                console.log(err)
+            }
+            this.loading = false;
+
+        },
+        refresh() {
+            this.refresh_loading = true;
+            this.updateLineInfo()
+            this.refresh_loading = false;
+        }
+    },
+    mounted() {
+        this.updateLineInfo();
+    }
 }
 </script>
     

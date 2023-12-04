@@ -7,12 +7,12 @@
       <v-spacer></v-spacer>
       <AddBusDialog></AddBusDialog>
       &nbsp;
-      <v-btn prepend-icon="mdi-delete-alert" text="删除" color="red" variant="flat" rounded></v-btn>
+      <v-btn icon="mdi-refresh" :loading="refresh_loading" @click="refresh()" variant="flat" rounded></v-btn>
     </v-card-title>
     <v-divider></v-divider>
-    <v-data-table v-model:search="search" :loading="loading" select-strategy="single" :items="items" items-per-page="10"
-      items-per-page-text="每页显示记录数量" :headers="headers" hover show-select :item-value="item => `${item.bus_id}`"
-      v-model="selected" loading-text="数据加载中,请稍等">
+    <v-data-table v-model:search="search" :loading="table_loading" select-strategy="single" :items="items"
+      items-per-page="10" items-per-page-text="每页显示记录数量" :headers="headers" hover :item-value="item => `${item.bus_id}`"
+      loading-text="数据加载中,请稍等">
       <template v-slot:item.detail="{ item }">
         <div class="text-end">
           <BusInfoDialog :bus_id="item.bus_id"></BusInfoDialog>
@@ -26,6 +26,7 @@
 <script>
 import AddBusDialog from './AddBusDialog.vue';
 import BusInfoDialog from './BusInfoDialog.vue'
+import { getAllBus } from '@/api/api'
 export default {
   components: {
     AddBusDialog,
@@ -35,24 +36,7 @@ export default {
     return {
       loading: false,
       search: '',
-      items: [
-        {
-          bus_id: '陕A12345',
-          fleet_id: '123',
-          year: '2019'
-        },
-        {
-          bus_id: '陕A54321',
-          fleet_id: '123',
-          year: '2019'
-        },
-        {
-          bus_id: '陕A33212',
-          fleet_id: '123',
-          year: '2021'
-        },
-
-      ],
+      items: [],
       headers: [
         {
           title: '车牌号',
@@ -64,8 +48,8 @@ export default {
           key: 'fleet_id',
         },
         {
-          title: '购买时间',
-          key: 'year'
+          title: '所属线路',
+          key: 'line_id',
         },
         {
           title: '更多',
@@ -73,12 +57,35 @@ export default {
           align: 'end'
         },
       ],
-      selected: [],
-      snackBarTimeout: 20000,
-      snackbar: true,
+      refresh_loading: false,
+      table_loading: true,
 
     }
+
   },
+  methods: {
+    async updateCarInfo() {
+      this.table_loading = true;
+      try {
+        const { data } = await getAllBus();
+        this.items = data.bus_info;
+        this.table_loading = false;
+        return;
+      } catch (err) {
+        console.log(err)
+      }
+      this.table_loading = false;
+    },
+    refresh() {
+      this.refresh_loading = true;
+      this.updateCarInfo();
+      this.refresh_loading = false;
+    }
+
+  },
+  mounted() {
+    this.updateCarInfo();
+  }
 }
 </script>
   

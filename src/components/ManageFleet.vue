@@ -10,10 +10,10 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-data-table v-model:search="search" :loading="loading" :items="items" items-per-page="10"
-            items-per-page-text="每页显示记录数量" :headers="headers" hover v-model="selected" loading-text="数据加载中,请稍等">
+            items-per-page-text="每页显示记录数量" :headers="headers" hover  loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
-                    <FleetInfoDialog :fleet_id="item.fleet_id" ></FleetInfoDialog>
+                    <FleetInfoDialog :fleet_id="item.fleet_id"></FleetInfoDialog>
                 </div>
             </template>
 
@@ -66,9 +66,6 @@ export default {
                     align: 'end'
                 },
             ],
-            selected: [],
-            snackBarTimeout: 20000,
-            snackbar: true,
         }
     },
 }

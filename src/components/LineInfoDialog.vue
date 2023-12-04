@@ -12,12 +12,11 @@
             <v-card-text>
 
                 <v-timeline side="end" slign="start">
-
                     <v-timeline-item v-for="(item, i) in stopItems" :key="i" size="" fill-dot
                         :dot-color="colors[i % stopItems.length]">
                         <div class="d-flex">
                             <div>
-                                <strong>{{ item.stop_id }}</strong>
+                                <strong>{{ item }}</strong>
                             </div>
                         </div>
                     </v-timeline-item>
@@ -34,6 +33,7 @@
 </template>
 
 <script>
+import { getStopsByLineId } from '@/api/api';
 export default {
     props: ['line_id'],
     data() {
@@ -48,28 +48,29 @@ export default {
                 'green-lighten-1',
                 'indigo-lighten-2',
             ],
-            stopItems: [
-                {
-                    stop_id: '省政府'
-                },
-                {
-                    stop_id: '省体育馆'
-                },
-                {
-                    stop_id: '小寨'
-                },
-                {
-                    stop_id: '国际机场'
-                },
-                {
-                    stop_id: '北客站'
-                },
-                {
-                    stop_id: '西安南站',
-                },
-            ],
+            stopItems: [],
         }
     },
+    methods: {
+        async fetchLineInfo() {
+            const param = "line_id=" + this.line_id;
+            try {
+                const { data } = await getStopsByLineId(param)
+                this.stopItems = data.stop_ids;
+            } catch (err) {
+                console.log(err);
+            }
+
+        }
+    },
+    watch: {
+        dialog(newValue) {
+            if (newValue) {
+                this.fetchLineInfo()
+            }
+        }
+
+    }
 
 }
 </script>

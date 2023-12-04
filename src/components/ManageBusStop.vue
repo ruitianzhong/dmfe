@@ -6,11 +6,13 @@
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
             <AddNewStopDialog></AddNewStopDialog>
+            <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
+                rounded></v-btn>
             &nbsp;
         </v-card-title>
         <v-divider></v-divider>
         <v-data-table v-model:search="search" :loading="loading" :items="items" items-per-page="10"
-            items-per-page-text="每页显示记录数量" :headers="headers" hover v-model="selected" loading-text="数据加载中,请稍等">
+            items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
                     <StopInfoDialog :stop_id="item.stop_id"></StopInfoDialog>
@@ -24,6 +26,7 @@
 <script>
 import AddNewStopDialog from '@/components/AddNewStopDialog.vue';
 import StopInfoDialog from '@/components/StopInfoDialog.vue'
+import { getAllStops } from '@/api/api';
 export default {
     components: {
         AddNewStopDialog,
@@ -33,18 +36,7 @@ export default {
         return {
             loading: false,
             search: '',
-            items: [
-                {
-                    stop_id: '钟楼'
-                },
-                {
-                    stop_id: '市图书馆',
-                },
-                {
-                    stop_id: '小寨',
-                },
-
-            ],
+            items: [],
             headers: [
                 {
                     title: '站名',
@@ -58,11 +50,40 @@ export default {
                 },
             ],
             selected: [],
-            snackBarTimeout: 20000,
-            snackbar: true,
+            refresh_loading: false,
 
         }
     },
+    methods: {
+        async updateStops() {
+            try {
+                this.loading = true;
+                const { data } = await getAllStops();
+                var arr = data.stop_ids;
+                for (var i = 0; i < arr.length; i++) {
+                    var e = {
+                        stop_id: arr[i],
+                    }
+                    this.items.push(e);
+                }
+                this.loading = false;
+                return;
+
+            } catch (err) {
+                console.log(err)
+            }
+            this.loading = false;
+        },
+        refresh() {
+            this.refresh_loading = true;
+            this.updateStops()
+            this.refresh_loading = false;
+        }
+
+    },
+    mounted() {
+        this.updateStops();
+    }
 }
 </script>
     
