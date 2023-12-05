@@ -57,9 +57,18 @@
                 <div class="text-subtitle-2 font-weight-black mb-1">违章时间</div>
                 <VueDatePicker v-model="date" :disabled="choosedDriver == null" locale="zh-cn" placeholder="请选择违章的时间"
                     :max-date="new Date()" />
-                {{ date }}
-                {{ date == null ? undefinded : Date.parse(date) }}
-                <ViolationDetailDialog :disabled="!shouldSubmit" :violation-info="violationInfo()"></ViolationDetailDialog>
+                <ViolationDetailDialog :disabled="!shouldSubmit" :violation-info="violationInfo()" @success="handleSuccess"
+                    @failure="handleFailure">
+                </ViolationDetailDialog>
+
+                <v-snackbar v-model="snackbar" :timeout="2000">
+                    {{ snackbar_msg }}
+                    <template v-slot:actions>
+                        <v-btn color="blue" variant="text" @click="snackbar = false">
+                            关闭
+                        </v-btn>
+                    </template>
+                </v-snackbar>
             </v-form>
         </v-card-text>
     </v-card>
@@ -89,6 +98,8 @@ export default {
             date: null,
             choosedBus: null,
             choosedStop: null,
+            snackbar: false,
+            snackbar_msg: '',
         }
     },
     components: { ViolationDetailDialog },
@@ -124,7 +135,7 @@ export default {
                 this.violationTypes = []
                 for (var i = 0; i < arr.length; i++) {
                     var e = {
-                        violation_typ_id: arr[i],
+                        violation_type_id: arr[i],
                         title: arr[i],
                     }
                     this.violationTypes.push(e)
@@ -189,23 +200,19 @@ export default {
             }
         },
 
-        async sendDriverInfo(userName) {
-            return new Promise(resolve => {
-                clearTimeout(this.timeout)
+        handleSuccess() {
+            this.snackbar_msg = "已经录入 " + this.choosedDriver.name + " 的违章记录"
+            this.snackbar = true;
 
-                this.timeout = setTimeout(() => {
-                    if (!userName) return resolve('Please enter a user name.')
-                    if (userName === 'johnleider')
-                        return resolve('User name already taken. Please try another one.')
-                    var reply = { type: "error", msg: "已经存在相同id用户", title: '错误' } // mcoking the data
-                    return resolve(reply)
-                }, 1000)
-            })
+        },
+        handleFailure(msg) {
+            this.snackbar_msg = "录入失败，原因：" + msg
+            this.snackbar = true;
         },
     },
     computed: {
         shouldSubmit() {
-            return this.date != null && this.choosedDriver != null && this.choosedBus != null && this.choosedStop != null && this.choosedType != null
+            return this.date != null && this.choosedDriver != null && this.choosedBus != null && this.choosedStop != null && this.choosedType != null && this.snackbar != true
         }
     },
     mounted() {
@@ -220,6 +227,13 @@ export default {
             if (nv != null) {
                 this.fetchLineStops();
             }
+        },
+        snackbar(nv) {
+            if (nv == false) {
+                this.choosedDriver = null;
+                this.date = null;
+            }
+
         }
     }
 }

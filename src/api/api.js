@@ -16,6 +16,13 @@ export const logout = () => {
     })
 }
 
+export const getAllFleet = () => {
+    return axios.request({
+        url: "/api/fleets/get-all-fleets",
+        method: "get"
+    })
+}
+
 export const getAllDriverInfo = () => {
     return axios.request({
         url: "/api/driver/get-all-driver-info",

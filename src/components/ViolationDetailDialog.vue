@@ -30,7 +30,7 @@
                     <v-btn color="grey" variant="text" @click="dialog = false">
                         取消
                     </v-btn>
-                    <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                    <v-btn color="green-darken-1" variant="text" @click="submitViolationRecord()" :loading="loading">
                         确认
                     </v-btn>
                 </v-card-actions>
@@ -40,11 +40,13 @@
 </template>
   
 <script>
+import { addViolationRecord } from '@/api/api';
 export default {
     props: ['violationInfo', 'disabled'],
     data() {
         return {
             dialog: false,
+            loading:false,
             year: '1990',
             gender: '男',
             fleet_id: '12345',
@@ -52,10 +54,34 @@ export default {
             start: null,
             end: null,
             date: null,
+            alert: false,
         }
     },
     onMounted() {
-    }
+    },
+
+    methods: {
+        async submitViolationRecord() {
+
+            const param = {
+                violation_type_id: this.violationInfo.choosedType.violation_type_id,
+                time: Date.parse(this.violationInfo.date) / 1000,
+                stop_id: this.violationInfo.choosedStop.stop_id,
+                bus_id: this.violationInfo.choosedBus.bus_id,
+                driver_id: this.violationInfo.driver_id,
+            }
+            this.loading = true
+            const { data } = await addViolationRecord(param)
+            if (data.code == "100") {
+                this.$emit("failure", data.msg)
+            } else {
+                this.$emit("success")
+            }
+            this.loading= false;
+            this.dialog = false;
+        }
+
+    },
 
 }
 </script>

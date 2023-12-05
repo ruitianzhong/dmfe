@@ -1,6 +1,6 @@
 <template>
     <v-layout>
-        <v-navigation-drawer permanant absolute>
+        <v-navigation-drawer permanent absolute>
             <v-list color="transparent" flat>
                 <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" title="Ruitian Zhong"
                     :subtitle="'账号 ' + admin_id" lines="two" append-icon="mdi-bus-side">

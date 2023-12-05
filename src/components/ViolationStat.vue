@@ -1,7 +1,7 @@
 <script >
 import { defineComponent } from "vue";
 import { VChart } from "@visactor/vchart";
-
+import { getAllFleet } from '@/api/api'
 
 export default defineComponent({
 
@@ -82,29 +82,49 @@ export default defineComponent({
     },
     data() {
         return {
-            choosedFleet: [{
-                title: '全部',
-                fid: -1,
-            }],
-            fleetItems: [
-                {
-                    title: '全部',
-                    fid: -1,
-                },
-                {
-                    title: '1号车队',
-                    fid: 1,
-                },
-                {
-                    title: '2号车队',
-                    fid: 2,
-                }
-            ],
+            choosedFleet: null,
+            fleetItems: [],
+            date: null,
         }
     },
 
+    methods: {
+        async fetchFleetItem() {
+            try {
+                const { data } = await getAllFleet()
+                var arr = data.fleet_ids;
+                this.fleetItems = [];
+                for (var i = 0; i < arr.length; i++) {
+                    var e = {
+                        title: arr[i],
+                        fleet_id: arr[i],
+                    }
+                    this.fleetItems.push(e);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+
+        }
+
+    },
+    computed: {
+        show() {
+            return this.date != null && this.choosedFleet != null;
+        }
+    },
     mounted() {
+        this.fetchFleetItem();
         this.createOrUpdateChart();
+    },
+
+    watch: {
+        choosedFleet(ov) {
+            if (ov != null && this.date != null) {
+
+            }
+        }
+
     },
 
     updated() {
@@ -138,7 +158,7 @@ export default defineComponent({
     <v-row class="d-flex pe-2 text-center ml-10" justify="center">
         <v-col cols="5">
             <v-combobox label="请选择车队" height="1" density="compact" width="300" variant="outlined" :items="fleetItems"
-                :hide-no-data="false" v-model="choosedFleet" multiple>
+                :hide-no-data="false" v-model="choosedFleet">
                 <template v-slot:no-data>
                     <v-list-item>
                         <v-list-item-title>
