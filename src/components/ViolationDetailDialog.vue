@@ -14,13 +14,13 @@
                 <v-divider></v-divider>
                 <v-card-text>
                     <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :title="violationInfo.name"
-                        :subtitle="'工号 ' + violationInfo.did" lines="two" append-icon="mdi-bus-side">
+                        :subtitle="'工号 ' + violationInfo.driver_id" lines="two" append-icon="mdi-bus-side">
                     </v-list-item>
                     <v-list-item prepend-icon="mdi-road" title="时间"
                         :subtitle="violationInfo.date.toLocaleString()"></v-list-item>
                     <v-list-item prepend-icon="mdi-bus-stop" title="站点"
                         :subtitle="violationInfo.choosedStop.title"></v-list-item>
-                    <v-list-item prepend-icon="mdi-road" title="路线" :subtitle="violationInfo.line.name"></v-list-item>
+                    <v-list-item prepend-icon="mdi-road" title="路线" :subtitle="violationInfo.line"></v-list-item>
                     <v-list-item prepend-icon="mdi-bus" title="车辆" :subtitle="violationInfo.choosedBus.title"></v-list-item>
                     <v-list-item prepend-icon="mdi-alert-box" title="违章类型"
                         :subtitle="violationInfo.choosedType.title"></v-list-item>
@@ -52,33 +52,8 @@ export default {
             start: null,
             end: null,
             date: null,
-            violation_headers: [
-
-                {
-                    title: '时间',
-                    key: 'time',
-                    align: 'start',
-                },
-                {
-                    title: '违章种类',
-                    key: 'type',
-                    align: 'end'
-                }
-            ],
-            violation_items: [
-                {
-                    time: '2023-03-03',
-                    type: '闯红灯',
-                },
-                {
-                    time: '2023-02-02',
-                    type: '不礼让行人'
-                }
-            ]
         }
     },
-
-
     onMounted() {
     }
 

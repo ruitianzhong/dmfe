@@ -29,7 +29,6 @@
                     </template>
 
                 </v-combobox>
-
                 <div class="text-subtitle-2 font-weight-black mb-1">站点</div>
                 <v-combobox label="请选择违章站点" density="compact" variant="outlined" :disabled="choosedDriver == null"
                     :items="violationStops" :hide-no-data="false" v-model="choosedStop">
@@ -58,7 +57,9 @@
                 <div class="text-subtitle-2 font-weight-black mb-1">违章时间</div>
                 <VueDatePicker v-model="date" :disabled="choosedDriver == null" locale="zh-cn" placeholder="请选择违章的时间"
                     :max-date="new Date()" />
-               <ViolationDetailDialog  :disabled="!shouldSubmit" :violation-info="violationInfo()" ></ViolationDetailDialog>
+                {{ date }}
+                {{ date == null ? undefinded : Date.parse(date) }}
+                <ViolationDetailDialog :disabled="!shouldSubmit" :violation-info="violationInfo()"></ViolationDetailDialog>
             </v-form>
         </v-card-text>
     </v-card>
@@ -66,6 +67,7 @@
   
 <script>
 import ViolationDetailDialog from './ViolationDetailDialog.vue'
+import { getAllDriverInfo, getAllViolationTypes, getStopsByLineId } from '@/api/api'
 export default {
     data() {
         return {
@@ -78,79 +80,59 @@ export default {
             msg: undefined,
             alert: false,
             reply: undefined,
-            driverItems: [
-                {
-                    name: 'Alice',
-                    did: '00000',
-                    title: "Alice",
-                    props: {
-                        subtitle: "工号 00000 车队 01",
-
-                    }
-                },
-                {
-                    name: 'Bob',
-                    did: '00001',
-                    title: 'Bob',
-                    props: {
-                        subtitle: "工号 00001 车队 02",
-                    }
-                },
-                {
-                    name: 'Cindy',
-                    did: '00002',
-                    title: 'Cindy',
-                    props: {
-                        subtitle: "工号 00002 车队03"
-                    }
-                }
-            ],
-            violationTypes: [
-                {
-                    title: '闯红灯',
-                    vid: '111'
-                },
-                {
-                    title: '未礼让行人',
-                    vid: '112'
-                }
-            ],
-            violationStops:[
-                {
-                    title:'省体育馆',
-                    sno:'省体育馆'
-                },
-                {
-                    title:'篮球中心',
-                    sno:'篮球中心'
-                }
-            ],
-            violationCars:[
-                {
-                    title:'陕A12345',
-                    bno:'陕A12345'
-                },
-                {
-                    title:'陕A54321',
-                    bno:'陕A12345'
-                }
-
-            ],
-
+            driverItems: [],
+            violationTypes: [],
+            violationStops: [],
+            violationCars: [],
             choosedDriver: null,
             choosedType: null,
             date: null,
-            choosedBus:null,
-            choosedStop:null,
-            line:{
-                name:'1路',
-                lno:1
-            }
+            choosedBus: null,
+            choosedStop: null,
         }
     },
-
     components: { ViolationDetailDialog },
     methods: {
+        async fetchAllDriverInfo() {
+            try {
+                const { data } = await getAllDriverInfo();
+                this.driverItems = []
+                var arr = data.driver_info;
+                for (var i = 0; i < arr.length; i++) {
+                    var item = {
+                        driver_id: arr[i].driver_id,
+                        title: arr[i].name,
+                        props: {
+                            subtitle: '工号 ' + arr[i].driver_id + ' 车队 ' + arr[i].fleet_id
+                        },
+                        line_id: arr[i].line_id,
+                        name: arr[i].name
+                    }
+                    this.driverItems.push(item);
+                }
+            } catch (err) {
+                console.log(err)
+            }
+
+
+        },
+
+        async fetchViolationType() {
+            try {
+                const { data } = await getAllViolationTypes();
+                var arr = data.violation_types;
+                this.violationTypes = []
+                for (var i = 0; i < arr.length; i++) {
+                    var e = {
+                        violation_typ_id: arr[i],
+                        title: arr[i],
+                    }
+                    this.violationTypes.push(e)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
         async submit() {
             this.loading = true
 
@@ -160,23 +142,51 @@ export default {
             this.alert = true
 
         },
-        violationInfo(){
+        violationInfo() {
             if (this.date != null && this.choosedDriver != null && this.choosedBus != null && this.choosedStop != null && this.choosedType != null) {
                 return {
-                    did: this.choosedDriver.did,
+                    driver_id: this.choosedDriver.driver_id,
                     name: this.choosedDriver.name,
                     choosedBus: this.choosedBus,
                     choosedStop: this.choosedStop,
                     date: this.date,
                     choosedType: this.choosedType,
-                    line:this.line,
+                    line: this.choosedDriver.line_id
                 }
             } else {
                 return {
-                    noData:true
+                    noData: true
                 }
             }
-            
+
+        },
+
+        async fetchLineStops() {
+            var param = "line_id=" + this.choosedDriver.line_id;
+            try {
+                var { data } = await getStopsByLineId(param);
+                this.violationStops = [];
+                var arr = data.stop_ids
+                for (var i = 0; i < arr.length; i++) {
+                    const e = {
+                        stop_id: arr[i],
+                        title: arr[i]
+                    }
+                    this.violationStops.push(e);
+                }
+
+                arr = data.bus_ids;
+                this.violationCars = []
+                for (i = 0; i < arr.length; i++) {
+                    const e = {
+                        bus_id: arr[i],
+                        title: arr[i],
+                    }
+                    this.violationCars.push(e)
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
 
         async sendDriverInfo(userName) {
@@ -193,10 +203,24 @@ export default {
             })
         },
     },
-    computed:{
-        shouldSubmit(){
+    computed: {
+        shouldSubmit() {
             return this.date != null && this.choosedDriver != null && this.choosedBus != null && this.choosedStop != null && this.choosedType != null
         }
     },
+    mounted() {
+        this.fetchAllDriverInfo();
+        this.fetchViolationType();
+    },
+    watch: {
+        choosedDriver(nv) {
+            this.choosedBus = null
+            this.choosedStop = null
+            this.choosedType = null
+            if (nv != null) {
+                this.fetchLineStops();
+            }
+        }
+    }
 }
 </script> 
