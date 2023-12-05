@@ -1,42 +1,29 @@
 <script >
 import { defineComponent } from "vue";
 import { VChart } from "@visactor/vchart";
-import { getAllFleet } from '@/api/api'
+import { getAllFleet, violationStatByTimeRangeAndFleetId } from '@/api/api'
 
 export default defineComponent({
 
     setup() {
-        let vchart;
-        let chart = null;
-        const createOrUpdateChart = () => {
+        let vchart = null;
+        const createOrUpdateChart = (nv) => {
             const container = document.getElementById("123");
             if (container && !vchart) {
-                // chart = new VChart(parseSpec(chartProps), {
-                //   dom: container,
-                // });
                 vchart = new VChart({
                     type: 'pie',
                     data: [
                         {
                             id: 'id0',
-                            values: [
-                                { type: 'oxygen', value: '46.60' },
-                                { type: 'silicon', value: '27.72' },
-                                { type: 'aluminum', value: '8.13' },
-                                { type: 'iron', value: '5' },
-                                { type: 'calcium', value: '3.63' },
-                                { type: 'sodium', value: '2.83' },
-                                { type: 'potassium', value: '2.59' },
-                                { type: 'others', value: '3.5' }
-                            ]
+                            values: [],
                         }
                     ],
                     outerRadius: 0.8,
                     valueField: 'value',
                     categoryField: 'type',
                     title: {
-                        visible: true,
-                        text: '违章类型'
+                        visible: false,
+                        text: '违章类型饼图'
                     },
                     legends: {
                         visible: true,
@@ -50,7 +37,7 @@ export default defineComponent({
                             content: [
                                 {
                                     key: datum => datum['type'],
-                                    value: datum => datum['value'] + '%'
+                                    value: datum => datum['value']
                                 }
                             ]
                         }
@@ -59,8 +46,40 @@ export default defineComponent({
                 vchart.renderAsync();
                 // chart.renderAsync();
                 return true;
-            } else if (chart) {
-                // chart.updateSpec(parseSpec(chartProps));
+            } else if (vchart) {
+                vchart.updateSpec({
+                    type: 'pie',
+                    data: [
+                        {
+                            id: 'id0',
+                            values: nv,
+                        }
+                    ],
+                    outerRadius: 0.8,
+                    valueField: 'value',
+                    categoryField: 'type',
+                    title: {
+                        visible: false,
+                        text: '违章类型饼图'
+                    },
+                    legends: {
+                        visible: true,
+                        orient: 'left'
+                    },
+                    label: {
+                        visible: true
+                    },
+                    tooltip: {
+                        mark: {
+                            content: [
+                                {
+                                    key: datum => datum['type'],
+                                    value: datum => datum['value']
+                                }
+                            ]
+                        }
+                    }
+                });
                 // chart.renderAsync();
                 vchart.renderAsync();
                 return true;
@@ -85,6 +104,9 @@ export default defineComponent({
             choosedFleet: null,
             fleetItems: [],
             date: null,
+            violation_data: [],
+            copy: [],
+            ready: false,
         }
     },
 
@@ -105,45 +127,60 @@ export default defineComponent({
                 console.log(err);
             }
 
+        },
+        async fetchViolationInfo() {
+            if (this.choosedFleet != null && this.date != null && this.date[0] != undefined && this.date[1] != undefined) {
+                var start = Date.parse(this.date[0]) / 1000, end = Date.parse(this.date[1]) / 1000, fleet_id = this.choosedFleet.fleet_id;
+                var param = "start=" + start + "&end=" + end + "&fleet_id=" + fleet_id;
+                console.log(param)
+                try {
+                    this.violation_data = [];
+                    const { data } = await violationStatByTimeRangeAndFleetId(param);
+                    var arr = data.violation_stat;
+                    var temp = [];
+                    for (var i = 0; arr != null && i < arr.length; i++) {
+                        var e = {
+                            type: arr[i].violation_type_id,
+                            value: arr[i].count,
+                        }
+                        temp.push(e);
+                    }
+                    this.violation_data = temp;
+                    this.copy = temp;
+                    this.createOrUpdateChart(temp);
+
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        },
+        query() {
+            this.fetchViolationInfo();
         }
 
     },
     computed: {
         show() {
-            return this.date != null && this.choosedFleet != null;
+            return this.date != null && this.choosedFleet != null && this.date[0] != undefined && this.date[1] != undefined;
         }
     },
     mounted() {
         this.fetchFleetItem();
-        this.createOrUpdateChart();
+        this.createOrUpdateChart(this.violation_data);
     },
-
     watch: {
-        choosedFleet(ov) {
-            if (ov != null && this.date != null) {
-
-            }
-        }
-
     },
 
     updated() {
         this.createOrUpdateChart();
     },
-
     beforeUnmount() {
         this.releaseChart();
     },
 });
 </script>
 
-<!-- <template>
-  <h1>this is a demo of barchart</h1>
 
-<div class="barchart-container" id="barchart-container"></div>
-  <div class="abc" id="123"></div>
-
-</template> -->
 
 
 <template>
@@ -171,12 +208,30 @@ export default defineComponent({
         <v-col cols="5">
             <VueDatePicker v-model="date" range placeholder="请选择查询的时间范围" :max-date="new Date()" locale="zh-cn" />
         </v-col>
+        <v-col cols="2">
+            <v-btn text="查询" variant="flat" color="#07C160" prepend-icon="mdi-magnify" @click="query()"
+                :disabled="!(choosedFleet != null && date != null && date[0] != undefined && date[1] != undefined)"></v-btn>
+        </v-col>
     </v-row>
-    <table>
-
-        <div class="treemap-container" id="123"></div>
-
-    </table>
+    <v-table v-if="ready">
+        <thead>
+            <tr>
+                <th class="text-left">
+                    违章类型
+                </th>
+                <th class="text-left">
+                    次数
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in copy" :key="item.type">
+                <td>{{ item.type }}</td>
+                <td>{{ item.value }}</td>
+            </tr>
+        </tbody>
+    </v-table>
+    <div class="treemap-container" id="123"></div>
 </template> 
 
 
