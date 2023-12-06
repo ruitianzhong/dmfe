@@ -16,7 +16,8 @@
             </v-combobox>
 
             <div class="text-subtitle-2 font-weight-black mb-1">车队编号</div>
-            <v-combobox density="compact" variant="outlined" :items="fleetsItems" :hide-no-data="false" v-model="fleet">
+            <v-combobox :disabled="shouldFormDisabled" density="compact" variant="outlined" :items="fleetsItems"
+                :hide-no-data="false" v-model="fleet">
                 <template v-slot:no-data>
                     <v-list-item>
                         <v-list-item-title>
@@ -26,7 +27,8 @@
                 </template>
             </v-combobox>
             <div class="text-subtitle-2 font-weight-black mb-1">路线</div>
-            <v-combobox density="compact" variant="outlined" :items="lineItems" :hide-no-data="false" v-model="line">
+            <v-combobox density="compact" :disabled="shouldFormDisabled" variant="outlined" :items="lineItems"
+                :hide-no-data="false" v-model="line">
                 <template v-slot:no-data>
                     <v-list-item>
                         <v-list-item-title>
@@ -40,37 +42,39 @@
             <v-row>
                 <v-col>
                     <div class="text-subtitle-2 font-weight-black mb-1">性别</div>
-                    <v-btn-toggle density="compact" v-model="gender" color="primary" class="mb-4 text-none" mandatory>
+                    <v-btn-toggle :disabled="shouldFormDisabled" density="compact" v-model="gender" color="primary"
+                        class="mb-4 text-none" mandatory>
                         <v-btn value="male">男</v-btn>
                         <v-btn value="female">女</v-btn>
                     </v-btn-toggle>
                 </v-col>
                 <v-col>
                     <div class="text-subtitle-2 font-weight-black mb-1">出生年份</div>
-                    <VueDatePicker v-model="year" year-picker locale="zh-cn" modelHeight="255" />
+                    <VueDatePicker :disabled="shouldFormDisabled" v-model="year" year-picker locale="zh-cn"
+                        modelHeight="255" />
                 </v-col>
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn :disabled="loading" :loading="loading" prepend-icon="mdi-refresh" block class="text-none mb-4" color="green-lighten-1"
-                        size="x-large" variant="flat">
+                    <v-btn :disabled="loading" :loading="loading" prepend-icon="mdi-refresh" block class="text-none mb-4"
+                        color="green-lighten-1" size="x-large" variant="flat">
                         恢复
                     </v-btn>
                 </v-col>
                 <v-col>
-                    <v-btn :disabled="loading" :loading="loading" block class="text-none mb-4" color="indigo-darken-3"
-                        size="x-large" variant="flat">
+                    <v-btn :disabled="submitDisabled" :loading="loading" block class="text-none mb-4"
+                        color="indigo-darken-3" size="x-large" variant="flat">
                         确认
                     </v-btn>
 
                 </v-col>
-
             </v-row>
         </v-card-text>
     </v-card>
 </template>
   
 <script>
+import { getAllDriverInfo, getAllFleet } from '@/api/api'
 export default {
     data() {
         return {
@@ -82,33 +86,7 @@ export default {
             msg: undefined,
             alert: false,
             reply: undefined,
-            driverItems: [
-                {
-                    name: 'Alice',
-                    did: '00000',
-                    title: "Alice",
-                    props: {
-                        subtitle: "工号 00000 车队 01",
-
-                    }
-                },
-                {
-                    name: 'Bob',
-                    did: '00001',
-                    title: 'Bob',
-                    props: {
-                        subtitle: "工号 00001 车队 02",
-                    }
-                },
-                {
-                    name: 'Cindy',
-                    did: '00002',
-                    title: 'Cindy',
-                    props: {
-                        subtitle: "工号 00002 车队03"
-                    }
-                }
-            ],
+            driverItems: [],
             lineItems: [
                 {
                     name: '1路',
@@ -132,59 +110,82 @@ export default {
                 { title: '2号车队', fno: 2 },
                 { title: '3号车队', fno: 3 },
             ],
-            fleet: {
-                title: '2号车队',
-                fno: 3,
-            }
+            fleet: null,
 
         }
     },
 
     components: {},
     methods: {
-        async submit() {
-            this.loading = true
-
-            const results = await this.sendDriverInfo('user data')
-            this.reply = results
-            this.loading = false
-            this.alert = true
-
-        },
-        violationInfo() {
-            if (this.date != null && this.choosedDriver != null) {
-                return {
-                    did: this.choosedDriver.did,
-                    name: this.choosedDriver.name,
-                    choosedBus: this.choosedBus,
-                    choosedStop: this.choosedStop,
-                    date: this.date,
-                    choosedType: this.choosedType,
-                    line: this.line,
+        async fetchAllDriverInfo() {
+            try {
+                const { data } = await getAllDriverInfo();
+                var arr = data.driver_info
+                this.driverItems = []
+                for (var i = 0; i < arr.length; i++) {
+                    var e = {
+                        driver_id: arr[i].driver_id,
+                        line_id: arr[i].driver_id,
+                        fleet_id: arr[i].fleet_id,
+                        title: arr[i].name,
+                        props: {
+                            subtitle: "工号 " + arr[i].driver_id + " 车队 " + arr[i].fleet_id,
+                        }
+                    }
+                    this.driverItems.push(e)
                 }
-            } else {
-                return {
-                    noData: true
-                }
+
+
+            } catch (err) {
+                console.log(err);
             }
 
         },
-
-        async sendDriverInfo(userName) {
-            return new Promise(resolve => {
-                clearTimeout(this.timeout)
-
-                this.timeout = setTimeout(() => {
-                    if (!userName) return resolve('Please enter a user name.')
-                    if (userName === 'johnleider')
-                        return resolve('User name already taken. Please try another one.')
-                    var reply = { type: "error", msg: "已经存在相同id用户", title: '错误' } // mcoking the data
-                    return resolve(reply)
-                }, 1000)
-            })
+        async fetchFleetInfo() {
+            try {
+                const { data } = await getAllFleet();
+                this.fleetsItems = []
+                var arr = data.fleet_ids;
+                for (var i = 0; i < arr.length; i++) {
+                    const e = {
+                        title: arr[i],
+                        fleet_id: arr[i],
+                    }
+                    this.fleetsItems.push(e);
+                }
+                this.fleet = { title: this.choosedDriver.fleet_id, fleet_id: this.choosedDriver.fleet_id }
+            } catch (err) {
+                console.log(err)
+            }
         },
+        async fetchAvailableLine() {
+
+        }
     },
     computed: {
+        shouldFormDisabled() {
+            if (this.choosedDriver != null) {
+                return false;
+            }
+            return true
+        },
+        submitDisabled() {
+            if (this.choosedDriver != null && this.line != null && this.fleet != null && this.gender != null && this.year != null) {
+                return false
+            }
+            return true
+        }
     },
+    mounted() {
+        this.fetchAllDriverInfo();
+    },
+    watch: {
+        choosedDriver(nv) {
+            if (nv != null) {
+                this.fetchFleetInfo();
+            }
+        }
+
+    }
 }
 </script> 
