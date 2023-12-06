@@ -44,6 +44,15 @@ export const getAllLineInfo = () => {
     })
 }
 
+export const getLineByFleetId = (param) => {
+    return axios.request(
+        {
+            url: "/api/line/get-line-by-fleet-id?" + param,
+            method: "get",
+        }
+    )
+}
+
 export const getStopsByLineId = (param) => {
     return axios.request(
         {

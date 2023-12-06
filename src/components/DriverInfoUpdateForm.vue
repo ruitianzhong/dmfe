@@ -14,6 +14,10 @@
                     </v-list-item>
                 </template>
             </v-combobox>
+            <div class="text-subtitle-2 font-weight-black mb-1">司机姓名</div>
+            <v-text-field density="compact" v-model="name" :counter="15" label="姓名" hint="姓名在15个字符以内" variant="outlined"
+                :disabled="shouldFormDisabled">
+            </v-text-field>
 
             <div class="text-subtitle-2 font-weight-black mb-1">车队编号</div>
             <v-combobox :disabled="shouldFormDisabled" density="compact" variant="outlined" :items="fleetsItems"
@@ -26,7 +30,14 @@
                     </v-list-item>
                 </template>
             </v-combobox>
-            <div class="text-subtitle-2 font-weight-black mb-1">路线</div>
+
+            <div class="text-subtitle-2 font-weight-black mb-1">路线
+                <span class="text-subtitle-2 font-weight-black mb-3" v-if="this.choosedDriver != null">(原路线 {{ originLine()
+                }})
+                </span>
+
+
+            </div>
             <v-combobox density="compact" :disabled="shouldFormDisabled" variant="outlined" :items="lineItems"
                 :hide-no-data="false" v-model="line">
                 <template v-slot:no-data>
@@ -37,7 +48,6 @@
                     </v-list-item>
                 </template>
             </v-combobox>
-
 
             <v-row>
                 <v-col>
@@ -56,25 +66,27 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn :disabled="loading" :loading="loading" prepend-icon="mdi-refresh" block class="text-none mb-4"
+                    <v-btn :disabled="loading" prepend-icon="mdi-refresh" block class="text-none mb-4"
                         color="green-lighten-1" size="x-large" variant="flat">
                         恢复
                     </v-btn>
                 </v-col>
                 <v-col>
                     <v-btn :disabled="submitDisabled" :loading="loading" block class="text-none mb-4"
-                        color="indigo-darken-3" size="x-large" variant="flat">
+                        color="indigo-darken-3" size="x-large" variant="flat" @click="submitNewInfo()">
                         确认
                     </v-btn>
 
                 </v-col>
             </v-row>
+            <v-alert v-model="alert" @click:close="alert = false" :type="alertType" :text="msg" variant="outlined"
+                closable></v-alert>
         </v-card-text>
     </v-card>
 </template>
   
 <script>
-import { getAllDriverInfo, getAllFleet } from '@/api/api'
+import { getAllDriverInfo, getAllFleet, getLineByFleetId, modifyDriverInfo } from '@/api/api'
 export default {
     data() {
         return {
@@ -87,36 +99,27 @@ export default {
             alert: false,
             reply: undefined,
             driverItems: [],
-            lineItems: [
-                {
-                    name: '1路',
-                    title: '1路',
-                    lno: 1
-                },
-                {
-                    name: '2路',
-                    title: '2路',
-                    lno: 2
-                }
-            ],
+            lineItems: [],
             choosedDriver: null,
-            line: {
-                name: '1路',
-                lno: 1,
-                title: '1路'
-            },
+            line: null,
             year: '1997',
-            fleetsItems: [
-                { title: '2号车队', fno: 2 },
-                { title: '3号车队', fno: 3 },
-            ],
+            fleetsItems: [],
             fleet: null,
+            alertType: "",
 
         }
     },
 
     components: {},
     methods: {
+
+        originLine() {
+            if (this.choosedDriver != null && this.choosedDriver.line_id != '') {
+                return this.choosedDriver.line_id
+            } else {
+                return "未分配车队"
+            }
+        },
         async fetchAllDriverInfo() {
             try {
                 const { data } = await getAllDriverInfo();
@@ -125,9 +128,12 @@ export default {
                 for (var i = 0; i < arr.length; i++) {
                     var e = {
                         driver_id: arr[i].driver_id,
-                        line_id: arr[i].driver_id,
+                        line_id: arr[i].line_id,
                         fleet_id: arr[i].fleet_id,
+                        name: arr[i].name,
                         title: arr[i].name,
+                        gender: arr[i].gender,
+                        year: arr[i].year,
                         props: {
                             subtitle: "工号 " + arr[i].driver_id + " 车队 " + arr[i].fleet_id,
                         }
@@ -158,8 +164,63 @@ export default {
                 console.log(err)
             }
         },
-        async fetchAvailableLine() {
+        async submitNewInfo() {
+            const param = {
+                year: this.year,
+                fleet_id: this.fleet.fleet_id,
+                line_id: this.line.line_id,
+                gender: this.gender,
+                driver_id: this.choosedDriver.driver_id,
+                name: this.name,
+            }
+            this.loading = true
+            try {
 
+                const { data } = await modifyDriverInfo(param)
+                if (data.code == '200') {
+                    this.alertType = "success"
+                    this.msg = "成功修改工号 " + param.driver_id + " 的信息"
+                } else {
+                    this.alertType = "error"
+                    this.msg = data.msg
+                }
+                this.alert = true
+
+                this.fleet = null;
+                this.fleetsItems = []
+                this.lineItems = []
+                this.year = null
+                this.name = ''
+                this.choosedDriver = null
+                this.fetchAllDriverInfo()
+            } catch (err) {
+                console.log(err)
+            } finally {
+                this.loading = false
+            }
+
+        },
+        async fetchAvailableLine() {
+            if (this.fleet != null) {
+                var param = "fleet_id=" + this.fleet.fleet_id
+                this.lineItems = []
+                try {
+                    const { data } = await getLineByFleetId(param)
+                    var arr = data.line_id;
+                    for (var i = 0; i < arr.length; i++) {
+                        var e = {
+                            title: arr[i],
+                            line_id: arr[i]
+                        }
+                        this.lineItems.push(e)
+                    }
+                    if (this.choosedDriver.fleet_id == this.fleet.fleet_id && this.choosedDriver.line_id != '') {
+                        this.line = { title: this.choosedDriver.line_id, line_id: this.choosedDriver.line_id }
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
         }
     },
     computed: {
@@ -170,7 +231,7 @@ export default {
             return true
         },
         submitDisabled() {
-            if (this.choosedDriver != null && this.line != null && this.fleet != null && this.gender != null && this.year != null) {
+            if (this.choosedDriver != null && this.line != null && this.fleet != null && this.gender != null && this.year != null && this.name != '') {
                 return false
             }
             return true
@@ -183,6 +244,26 @@ export default {
         choosedDriver(nv) {
             if (nv != null) {
                 this.fetchFleetInfo();
+                this.name = nv.name
+                if (nv.gender == "男") {
+                    this.gender = "male"
+                } else {
+                    this.gender = "female"
+                }
+                this.year = nv.year
+
+            } else {
+                this.fleet = null;
+                this.fleetsItems = []
+                this.lineItems = []
+                this.year = null
+                this.name = ''
+            }
+        },
+        fleet(nv) {
+            this.line = null;
+            if (nv != null) {
+                this.fetchAvailableLine()
             }
         }
 
