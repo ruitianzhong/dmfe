@@ -74,7 +74,7 @@ export default defineComponent({
                             content: [
                                 {
                                     key: datum => datum['type'],
-                                    value: datum => datum['value']
+                                    value: datum => datum['value'] + '次 占比 ' + datum['percent'] + '%'
                                 }
                             ]
                         }
@@ -107,6 +107,7 @@ export default defineComponent({
             violation_data: [],
             copy: [],
             ready: false,
+            text: '',
         }
     },
 
@@ -132,7 +133,6 @@ export default defineComponent({
             if (this.choosedFleet != null && this.date != null && this.date[0] != undefined && this.date[1] != undefined) {
                 var start = Date.parse(this.date[0]) / 1000, end = Date.parse(this.date[1]) / 1000, fleet_id = this.choosedFleet.fleet_id;
                 var param = "start=" + start + "&end=" + end + "&fleet_id=" + fleet_id;
-                console.log(param)
                 try {
                     this.violation_data = [];
                     const { data } = await violationStatByTimeRangeAndFleetId(param);
@@ -145,10 +145,26 @@ export default defineComponent({
                         }
                         temp.push(e);
                     }
+                    var total = 0;
+                    for (i = 0; i < temp.length; i++) {
+                        total += Number(temp[i].value)
+                    }
+                    var t = ''
+                    for (i = 0; i < temp.length; i++) {
+                        var p = 100 * Number(temp[i].value) / total
+                        temp[i].percent = p.toFixed(2);
+                        t = t + temp[i].type + "共有" + temp[i].value + '次 '
+                    }
+                    this.text = t;
                     this.violation_data = temp;
                     this.copy = temp;
-                    this.createOrUpdateChart(temp);
+                    if (temp.length != 0) {
+                        this.ready = true;
+                    } else {
+                        this.ready = false;
+                    }
 
+                    this.createOrUpdateChart(temp);
                 } catch (err) {
                     console.log(err)
                 }
@@ -156,7 +172,7 @@ export default defineComponent({
         },
         query() {
             this.fetchViolationInfo();
-        }
+        },
 
     },
     computed: {
@@ -172,7 +188,7 @@ export default defineComponent({
     },
 
     updated() {
-        this.createOrUpdateChart();
+        this.createOrUpdateChart(this.violation_data);
     },
     beforeUnmount() {
         this.releaseChart();
@@ -213,6 +229,8 @@ export default defineComponent({
                 :disabled="!(choosedFleet != null && date != null && date[0] != undefined && date[1] != undefined)"></v-btn>
         </v-col>
     </v-row>
+    <div v-if="!ready" class="text-center">暂无数据</div>
+    <v-list-item v-if="ready" title="违章情况小结" :subtitle="text"></v-list-item>
     <v-table v-if="ready">
         <thead>
             <tr>
