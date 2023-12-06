@@ -62,6 +62,15 @@ export const getStopsByLineId = (param) => {
     )
 }
 
+export const getAllFleetDetailedInfo = () => {
+    return axios.request(
+        {
+            url: "/api/fleet/get-all-fleet-detailed-info",
+            method: "get",
+        }
+    )
+}
+
 export const getAllViolationTypes = () => {
     return axios.request(
         {

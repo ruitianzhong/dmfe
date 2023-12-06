@@ -20,13 +20,11 @@
                         </v-list-item>
                     </template>
                 </v-combobox>
-                <v-btn :loading="loading" type="submit" block class="mt-2 mb-10" text="确认" color="indigo-darken-3" ></v-btn>
-                <v-divider></v-divider>
-                <div class="text-subtitle-2 font-weight-black mb-1 mt-5">车队司机</div>
-                <v-data-table :items="violation_items" items-per-page="5" items-per-page-text="每页显示记录数量"
-                    :headers="violation_headers" hover :item-value="item => `${item.time}`" loading-text="数据加载中,请稍等">
-                </v-data-table>
-
+                <v-btn :loading="loading" type="submit" block class="mt-5 mb-5 " text="确认"
+                    :disabled="this.choosedDriver == null" color="indigo-darken-3" size="x-large"
+                    @click="setNewFleetCaptain()"></v-btn>
+                <v-alert :type="type" :text="msg" v-model="alert" closable @click:close="alert = false"
+                    variant="outlined"></v-alert>
             </v-card-text>
 
 
@@ -41,6 +39,7 @@
 </template>
   
 <script>
+import { getFleetMembers, setFleetCaptain } from '@/api/api';
 export default {
     props: ['fleet_id'],
     data() {
@@ -52,6 +51,8 @@ export default {
             start: null,
             end: null,
             date: null,
+            choosedDriver: null,
+            loading: false,
             violation_headers: [
                 {
                     title: '工号',
@@ -74,37 +75,76 @@ export default {
                     name: 'Mike',
                 }
             ],
-            driverItems: [
-                {
-                    name: 'Alice',
-                    did: '00000',
-                    title: "Alice",
-                    props: {
-                        subtitle: "工号 00000",
-
-                    }
-                },
-                {
-                    name: 'Bob',
-                    did: '00001',
-                    title: 'Bob',
-                    props: {
-                        subtitle: "工号 00001",
-                    }
-                },
-                {
-                    name: 'Cindy',
-                    did: '00002',
-                    title: 'Cindy',
-                    props: {
-                        subtitle: "工号 00002"
-                    }
-                }
-            ],
-            choosedDriver: null,
+            driverItems: [],
+            msg: '',
+            type: '',
+            alert: false,
         }
     },
     onMounted() {
+    },
+    methods: {
+        async fetchAvailableDriverForFleetCaptain() {
+            const param = "fleet_id=" + this.fleet_id;
+            try {
+                this.driverItems = []
+                const { data } = await getFleetMembers(param)
+                console.log(data, param)
+                const members = data.fleet_members
+                for (var i = 0; i < members.length; i++) {
+                    var e = {
+                        name: members[i].name,
+                        driver_id: members[i].driver_id,
+                        title: members[i].name,
+                        props: {
+                            subtitle: "工号 " + members[i].driver_id
+                        }
+                    }
+                    this.driverItems.push(e)
+                }
+                if (data.has_captain == true) {
+                    this.choosedDriver = {
+                        title: data.captain.name,
+                        driver_id: data.captain.driver_id,
+                        name: data.captain.name,
+                    }
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        async setNewFleetCaptain() {
+            const param = {
+                fleet_id: this.fleet_id,
+                driver_id: this.choosedDriver.driver_id
+            }
+            console.log(param)
+            this.loading = true
+            try {
+                const { data } = await setFleetCaptain(param)
+                if (data.code == "200") {
+                    this.type = "success"
+                    this.msg = "车队" + this.fleet_id + "的队长已经变更为" + this.choosedDriver.name
+                } else {
+                    this.type = "error"
+                    this.msg = data.msg
+                }
+                this.alert = true
+            } catch (err) {
+                console.log(err)
+            } finally {
+                this.loading = false;
+            }
+        }
+    },
+    watch: {
+        dialog(nv) {
+            if (nv == true) {
+                this.fetchAvailableDriverForFleetCaptain()
+            } else {
+                this.alert = false;
+            }
+        }
     }
 
 }

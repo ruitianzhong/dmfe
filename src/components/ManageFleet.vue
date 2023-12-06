@@ -6,11 +6,13 @@
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
             <AddFleetDialog></AddFleetDialog>
+            <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
+                rounded></v-btn>
             &nbsp;
         </v-card-title>
         <v-divider></v-divider>
         <v-data-table v-model:search="search" :loading="loading" :items="items" items-per-page="10"
-            items-per-page-text="每页显示记录数量" :headers="headers" hover  loading-text="数据加载中,请稍等">
+            items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
                     <FleetInfoDialog :fleet_id="item.fleet_id"></FleetInfoDialog>
@@ -24,6 +26,7 @@
 <script>
 import AddFleetDialog from '@/components/AddFleetDialog.vue';
 import FleetInfoDialog from '@/components/FleetInfoDialog.vue'
+import { getAllFleetDetailedInfo } from '@/api/api';
 export default {
     components: {
         AddFleetDialog,
@@ -68,6 +71,34 @@ export default {
             ],
         }
     },
+
+    mounted() {
+        this.fetchFleetDetailedInfo();
+    },
+    methods: {
+        async fetchFleetDetailedInfo() {
+            try {
+                const { data } = await getAllFleetDetailedInfo()
+                var info = data.fleets_info
+                this.items = []
+                for (var i = 0; i < info.length; i++) {
+                    var e = {
+                        fleet_id: info[i].fleet_id,
+                        captain_name: info[i].has_captain ? info[i].captain_name : '空缺',
+                        captain_id: info[i].has_captain ? info[i].captain_id : '空缺',
+                        has_captain: info[i].has_captain
+                    }
+                    this.items.push(e);
+                }
+            } catch (err) {
+                console.log(err)
+            }
+
+        },
+        refresh() {
+
+        }
+    }
 }
 </script>
     

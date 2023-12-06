@@ -19,7 +19,7 @@
                 </div>
             </template>
             <template v-slot:item.modify="{ item }">
-                <LineCaptainDialog :line_id="item.line_id"></LineCaptainDialog>
+                <LineCaptainDialog :line_id="item.line_id" @refresh="refresh()"></LineCaptainDialog>
             </template>
 
         </v-data-table>
