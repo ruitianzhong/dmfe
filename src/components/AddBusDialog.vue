@@ -5,7 +5,7 @@
         </template>
         <v-card>
             <v-card-title>
-                <span class="py-5 font-weight-black">添加新的车辆</span>
+                <span class="py-5 font-weight-black">添加新的站点</span>
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
@@ -31,7 +31,7 @@
                         确认
                     </v-btn>
                     <v-alert :type="reply.type" closable v-model="alert" :title="reply.title" variant="outlined"
-                             density="compact" @click:close="alert = false" :text="reply.msg">
+                        density="compact" @click:close="alert = false" :text="reply.msg">
                     </v-alert>
                 </v-form>
             </v-card-text>
@@ -59,14 +59,14 @@ export default {
             busIdRules: [value => vm.checkBusId(value)],
             lineRules: [value => vm.checkLineId(value)],
             loading: false,
-            needrefresh:false
+            needrefresh: false
         }
     },
     methods: {
         async submit(event) {
             this.loading = true
             await event;
-            if (this.checkBusId(this.bus_id)!=true || this.checkLineId(this.choosedLine)!=true){
+            if (this.checkBusId(this.bus_id) != true || this.checkLineId(this.choosedLine) != true) {
                 this.loading = false;
                 return
             }
@@ -75,12 +75,12 @@ export default {
                 line_id: this.choosedLine,
                 bus_id: this.bus_id,
             }
-            
+
             try {
 
                 const { data } = await addOneBus(req);
-            
-                if (data.code=='200'){
+
+                if (data.code == '200') {
                     this.reply = {
                         msg: "成功添加车辆 " + id,
                         type: "success"
@@ -137,12 +137,12 @@ export default {
                 this.bus_id = null;
                 this.needrefresh = false;
                 this.fetchLineInfo()
-            }else {
+            } else {
                 if (this.needrefresh == true) {
                     this.$emit('refresh')
                 }
             }
-           
+
         }
     },
     mounted() {

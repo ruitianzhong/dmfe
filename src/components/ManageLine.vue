@@ -5,7 +5,7 @@
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" density="compact" label="搜索" single-line flat
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
-            <AddNewLineDialog></AddNewLineDialog>
+            <AddNewLineDialog @refresh="updateLineInfo"></AddNewLineDialog>
             <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
                 rounded></v-btn>
             &nbsp;
