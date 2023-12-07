@@ -13,7 +13,7 @@
 
                 <v-timeline side="end" slign="start">
                     <v-timeline-item v-for="(item, i) in stopItems" :key="i" size="" fill-dot
-                        :dot-color="colors[i % stopItems.length]">
+                        :dot-color="colors[i % colors.length]">
                         <div class="d-flex">
                             <div>
                                 <strong>{{ item }}</strong>

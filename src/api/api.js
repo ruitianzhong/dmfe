@@ -215,3 +215,12 @@ export const updateUserPassword = (param) => {
             data: param
         })
 }
+
+export const checkIfLogin = () => {
+    return axios.request(
+        {
+            url: "/api/user/check-if-login",
+            method: "get",
+        }
+    )
+}

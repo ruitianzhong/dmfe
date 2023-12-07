@@ -3,7 +3,7 @@
         <v-list-item class="mt-10 mb-5" width="500" :prepend-avatar="avatar" :title="name" subtitle="管理员账户" lines="two"
             density="comfortable">
             <template v-slot:title><span style="font-weight: 600;">{{ name }} <span class="text-subtitle"
-                        style="font-weight: 10;">({{ user_id }})</span></span></template>
+                        style="font-weight: 50;">({{ user_id }})</span></span></template>
             <template v-slot:prepend>
                 <v-avatar size="50">
                     <v-img :src="avatar" alt="John"></v-img>
@@ -14,13 +14,13 @@
         <v-divider class="ml-3 mt-2 mr-6"></v-divider>
         <div class="mt-5 ml-5" style="width: 400px;">
             <p class="mb-2 ">原密码</p>
-            <v-text-field v-model="oldPassword" variant="outlined" color="blue" bg-color="white"
+            <v-text-field v-model="oldPassword" type="password" variant="outlined" color="blue" bg-color="white"
                 density="compact"></v-text-field>
             <p class="mb-2 ">原密码</p>
-            <v-text-field v-model="newPassword" :disabled="oldPassword == ''" variant="outlined" color="blue"
+            <v-text-field v-model="newPassword" type="password" :disabled="oldPassword == ''" variant="outlined" color="blue"
                 bg-color="white" density="compact"></v-text-field>
             <p class="mb-2">确认密码</p>
-            <v-text-field v-model="confirmPassword" :disabled="newPassword == ''" variant="outlined" color="blue"
+            <v-text-field v-model="confirmPassword" type="password" :disabled="newPassword == ''" variant="outlined" color="blue"
                 density="compact"></v-text-field>
 
         </div>

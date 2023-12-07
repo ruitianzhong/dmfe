@@ -21,7 +21,7 @@
     </v-card>
 </template>
 <script>
-import { login } from '@/api/api';
+import { login, checkIfLogin } from '@/api/api';
 import router from '@/router';
 export default {
     data: vm => ({
@@ -66,7 +66,22 @@ export default {
         checkPassword(password) {
             if (password != '') return true
             return '请输入密码'
+        },
+        async checkIfLogin() {
+            try {
+                const { data } = await checkIfLogin()
+                if (data.code == "200") {
+                    router.push("/admin/home")
+                    console.log(data.code)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+
         }
     },
+    mounted() {
+        this.checkIfLogin()
+    }
 }
 </script>
