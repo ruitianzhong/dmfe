@@ -12,7 +12,7 @@
     <v-row>
       <v-col>
         <v-card class="mx-auto" max-width="344">
-          <v-img src="@/assets/HongKong.jpg" height="200px" cover></v-img>
+          <v-img src="@/assets/HongKongCompressed.jpg" height="200px" cover></v-img>
           <v-card-title>
             Modern Architecture
           </v-card-title>
@@ -35,7 +35,7 @@
       </v-col>
       <v-col>
         <v-card class="mx-auto" max-width="344">
-          <v-img src="@/assets/plane.png" height="200px" cover></v-img>
+          <v-img src="@/assets/plane-compressed.png" height="200px" cover></v-img>
           <v-card-title>
             User Friendly
           </v-card-title>
@@ -67,7 +67,7 @@
       <v-col>
 
         <v-card class="mx-auto" max-width="344">
-          <v-img src="@/assets/ForbiddenCity.jpg" height="200px" cover></v-img>
+          <v-img src="@/assets/ForbiddenCityCompressed.jpg" height="200px" cover></v-img>
 
           <v-card-title>
             Security
