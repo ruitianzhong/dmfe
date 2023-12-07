@@ -10,7 +10,7 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :title="driver_info.name"
+                <v-list-item :prepend-avatar="avatarUrl" :title="driver_info.name"
                     :subtitle="'工号 ' + driver_info.driver_id" lines="two" append-icon="mdi-bus-side">
                 </v-list-item>
                 <v-list-item prepend-icon="mdi-calendar" title="出生年份" :subtitle="driver_info.year"></v-list-item>
@@ -128,6 +128,11 @@ export default {
 
             } catch (err) {
                 console.log(err);
+            }
+        },
+        computed:{
+            avatarUrl() {
+                return "https://api.multiavatar.com/" + this.driver_info.driver_id + '.png'
             }
         }
 

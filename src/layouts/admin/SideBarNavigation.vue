@@ -2,8 +2,8 @@
     <v-layout>
         <v-navigation-drawer permanent absolute>
             <v-list color="transparent" flat>
-                <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" title="Ruitian Zhong"
-                    :subtitle="'账号 ' + admin_id" lines="two" append-icon="mdi-bus-side">
+                <v-list-item :prepend-avatar="avatar" :title="name" :subtitle="'账号 ' + user_id" lines="two"
+                    append-icon="mdi-bus-side">
                 </v-list-item>
 
             </v-list>
@@ -37,8 +37,8 @@
                         :title="title" :value="value" active-color="green" :to="value"></v-list-item>
 
                 </v-list-group>
-                <v-list-item title="新增用户" prepend-icon="mdi-account-plus" value="add-user"
-                    active-color="green"></v-list-item>
+                <!-- <v-list-item title="新增用户" prepend-icon="mdi-account-plus" value="add-user"
+                    active-color="green"></v-list-item> -->
                 <v-list-item title="车辆管理" value="bus-management" prepend-icon="mdi-bus-multiple" active-color="green"
                     to="/admin/bus-management"></v-list-item>
                 <v-list-item title="车队管理" value="fleet-management" prepend-icon="mdi-cog" active-color="green"
@@ -69,7 +69,7 @@
 
 <script>
 import { RouterView } from 'vue-router';
-import { logout } from '@/api/api'
+import { logout, getUserInfoByCookie } from '@/api/api'
 import router from '@/router'
 export default {
     data: () => ({
@@ -79,7 +79,7 @@ export default {
             // ['删除司机', 'mdi-delete', 'delete-driver'],
             ['录入违章信息', 'mdi-alert-octagon', 'add-violation'],
         ],
-        admin_id: '709221876',
+        user_id: '',
         data_query: [
             ['司机信息', 'mdi-information', 'driver-detail'],
             ['违章统计', 'mdi-numeric', 'violation-statistic']
@@ -89,6 +89,8 @@ export default {
             ['线路修改', 'mdi-road-variant', 'manage-line'],
         ],
         logout_loading: false,
+        name: '',
+        avatar: '',
     }),
     components: { RouterView },
 
@@ -110,7 +112,20 @@ export default {
                 console.log(err)
             }
             this.logout_loading = false;
+        },
+        async fetchUserInfo() {
+            try {
+                const { data } = await getUserInfoByCookie()
+                this.name = data.name
+                this.user_id = data.id
+                this.avatar = "https://api.multiavatar.com/" + data.id + ".png"
+            } catch (error) {
+                console.log(error)
+            }
         }
+    },
+    mounted() {
+        this.fetchUserInfo()
     }
 }
 </script>

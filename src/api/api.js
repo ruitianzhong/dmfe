@@ -103,6 +103,15 @@ export const getFleetCaptainByDriverId = (param) => {
     }))
 }
 
+export const getUserInfoByCookie = () => {
+    return axios.request(
+        {
+            url: '/api/user/info',
+            method: "get",
+        }
+    )
+}
+
 export const violationByTimeRangeDriverId = (param) => {
     return axios.request({
         url: "/api/violation/violation-by-time-range-driver-id?" + param,
@@ -196,4 +205,13 @@ export const setLineCaptain = (param) => {
         data: param,
         method: "post"
     })
+}
+
+export const updateUserPassword = (param) => {
+    return axios.request(
+        {
+            url: "/api/usr/update-user-password",
+            method: 'post',
+            data: param
+        })
 }
