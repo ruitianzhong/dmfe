@@ -5,7 +5,7 @@
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" density="compact" label="搜索" single-line flat
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
-            <AddFleetDialog></AddFleetDialog>
+            <AddFleetDialog @refresh="refresh"></AddFleetDialog>
             <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
                 rounded></v-btn>
             &nbsp;
@@ -78,6 +78,7 @@ export default {
     methods: {
         async fetchFleetDetailedInfo() {
             try {
+                this.loading = true
                 const { data } = await getAllFleetDetailedInfo()
                 var info = data.fleets_info
                 this.items = []
@@ -92,10 +93,13 @@ export default {
                 }
             } catch (err) {
                 console.log(err)
+            } finally {
+                this.loading = false
             }
 
         },
         refresh() {
+            this.fetchFleetDetailedInfo()
 
         }
     }

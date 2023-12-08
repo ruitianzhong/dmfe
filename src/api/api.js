@@ -224,3 +224,13 @@ export const checkIfLogin = () => {
         }
     )
 }
+
+export const addNewFleet = (param) => {
+    return axios.request(
+        {
+            url: "/api/fleet/add-new-fleet",
+            method: 'post',
+            data:param
+        }
+    )
+}

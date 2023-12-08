@@ -11,9 +11,9 @@
             <v-card-text>
                 <div class="text-subtitle-2 font-weight-black mb-1 mt-3">车队号</div>
                 <v-form validate-on="submit lazy" @submit.prevent="submit">
-                    <v-text-field density="compact" color="blue" v-model="bus_id" :counter="15" requried variant="outlined">
+                    <v-text-field density="compact" color="blue" v-model="fleet_id" :counter="15" requried variant="outlined">
                     </v-text-field>
-                    <div class="text-subtitle-2 font-weight-black mb-1">指定车队队长（车队队长将会转入新建立的车队中）</div>
+                    <!-- <div class="text-subtitle-2 font-weight-black mb-1">指定车队队长（车队队长将会转入新建立的车队中）</div>
                     <v-combobox density="compact" variant="outlined" color="blue" label="选填" :items="driverItems" :hide-no-data="false"
                         v-model="choosedDriver" >
                         <template v-slot:no-data>
@@ -23,14 +23,12 @@
                                 </v-list-item-title>
                             </v-list-item>
                         </template>
-                    </v-combobox>
-
-
-                    <v-btn type="submit" :disabled="loading" :loading="loading" block class="text-none mt-3 mb-4"
+                    </v-combobox> -->
+                        <v-btn type="submit" :disabled=" fleet_id == ''" :loading="loading" block class="text-none mt-3 mb-4"
                         color="indigo-darken-3" size="x-large" variant="flat">
                         提交
                     </v-btn>
-                    <v-alert :type="reply.type" closable v-if="alert" :title="reply.title" variant="outlined"
+                    <v-alert :type="reply.type" closable class="mt-3" v-model="alert"  variant="outlined"
                         :text="reply.msg" density="compact" @click:close="alert = false">
                     </v-alert>
                 </v-form>
@@ -47,17 +45,18 @@
 </template>
   
 <script>
+import { addNewFleet } from '@/api/api';
 export default {
     data() {
         return {
-            alert: true,
+            alert: false,
             reply: {
                 type: 'success',
                 title: 'title',
                 msg: 'success!',
             },
             dialog: false,
-            bus_id: null,
+            fleet_id: '',
             driverItems: [
                 {
                     name: 'Alice',
@@ -86,12 +85,40 @@ export default {
                 }
             ],
             choosedDriver: null,
-
+            loading: false
         }
     },
     methods: {
         async submit() {
-
+            const param ={
+                fleet_id:this.fleet_id
+            }
+            console.log(param)
+            try{
+                this.loading = true
+                const {data} =await addNewFleet(param)
+                if (data.code=="200"){
+                    this.reply.msg ="成功建立车队"
+                    this.reply.type="success"
+                }else{
+                    this.reply.msg=data.msg
+                    this.reply.type ="error"
+                }
+                this.alert =true
+            }catch(err){
+                console.log(err)
+            }finally{
+                this.loading = false
+            }
+        }
+    },
+    watch:{
+        dialog(nv){
+            if (!nv){
+                this.alert = false
+                this.fleet_id = ''
+                this.$emit('refresh')
+            }
         }
     }
 
