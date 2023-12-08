@@ -18,7 +18,10 @@
 
                 <v-img height="50" class="mb-5" src="@/assets/logo-large.png" />
 
-                <h1 class="text-h2 font-weight-bold">公交管理系统</h1>
+                <h1 class="text-h2 font-weight-bold"></h1>
+                <p :class="$vuetify.display.smAndUp ? 'text-h2 font-weight-bold' : 'text-h4 font-weight-bold'">
+                    公交管理系统
+                </p>
                 <br />
                 <font class="subtitle " size="4" color="#7F7F7F">简单易用，高效安全的公交司机管理系统</font>
                 <div class="py-5" />
@@ -30,7 +33,7 @@
                             登录
                         </v-btn>
                     </v-col>
-                    <v-col cols="1">
+                    <v-col cols="1" v-if="$vuetify.display.smAndUp">
                         <v-spacer></v-spacer>
                     </v-col>
                     <v-col cols="auto">
