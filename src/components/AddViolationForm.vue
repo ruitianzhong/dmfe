@@ -5,7 +5,7 @@
         <v-card-text>
             <div class="text-subtitle-2 font-weight-black mb-1">司机</div>
             <v-form validate-on="submit lazy" @submit.prevent="submit">
-                <v-combobox label="请选择司机" density="compact" variant="outlined" :items="driverItems" :hide-no-data="false"
+                <v-combobox label="请选择司机" color="blue" density="compact" variant="outlined" :items="driverItems" :hide-no-data="false"
                     v-model="choosedDriver">
                     <template v-slot:no-data>
                         <v-list-item>

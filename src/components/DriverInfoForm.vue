@@ -5,15 +5,15 @@
         <v-card-text>
             <div class="text-subtitle-2 font-weight-black mb-1">姓名</div>
             <v-form validate-on="submit lazy" @submit.prevent="submit">
-                <v-text-field density="compact" v-model="name" :rules="nameRules" :counter="15" label="姓名" hint="姓名在15个字符以内"
+                <v-text-field  color="blue" density="compact" v-model="name" :rules="nameRules" :counter="15" label="姓名" hint="姓名在15个字符以内"
                     required variant="outlined">
                 </v-text-field>
                 <div class="text-subtitle-2 font-weight-black mb-1">工号</div>
-                <v-text-field v-model="driver_id" density="compact" :counter="10" label="司机工号" hint="工号为5-10个数字" required
+                <v-text-field color="blue" v-model="driver_id" density="compact" :counter="10" label="司机工号" hint="工号为5-10个数字" required
                     :rules="didRules" height="10" variant="outlined">
                 </v-text-field>
                 <div class="text-subtitle-2 font-weight-black mb-1">车队编号</div>
-                <v-combobox density="compact" variant="outlined" :items="fleetsItems" v-model="choosedFleet"
+                <v-combobox  color="blue" density="compact" variant="outlined" :items="fleetsItems" v-model="choosedFleet"
                     :hide-no-data="false">
                     <template v-slot:no-data>
                         <v-list-item>

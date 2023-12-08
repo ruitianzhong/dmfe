@@ -1,6 +1,6 @@
 <template>
     <v-layout>
-        <v-navigation-drawer permanent absolute>
+        <v-navigation-drawer v-model="drawer" absolute>
             <v-list color="transparent" flat>
                 <v-list-item :prepend-avatar="avatar" :title="name" :subtitle="'账号 ' + user_id" lines="two"
                     append-icon="mdi-bus-side">
@@ -57,6 +57,7 @@
             </template>
         </v-navigation-drawer>
         <v-main scrollable style="min-height: 300px;">
+            <v-app-bar-nav-icon v-if="!drawer" variant="text" text="菜单" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
             <div>
                 <router-view />
 
@@ -72,26 +73,29 @@ import { RouterView } from 'vue-router';
 import { logout, getUserInfoByCookie } from '@/api/api'
 import router from '@/router'
 export default {
-    data: () => ({
-        driver_management: [
-            ['录入新司机信息', 'mdi-plus-outline', 'add-driver-info'],
-            ['更新司机信息', 'mdi-update', 'update-driver'],
-            // ['删除司机', 'mdi-delete', 'delete-driver'],
-            ['录入违章信息', 'mdi-alert-octagon', 'add-violation'],
-        ],
-        user_id: '',
-        data_query: [
-            ['司机信息', 'mdi-information', 'driver-detail'],
-            ['违章统计', 'mdi-numeric', 'violation-statistic']
-        ],
-        line_manage: [
-            ['管理站点', 'mdi-bus-stop', 'manage-bus-stop'],
-            ['线路修改', 'mdi-road-variant', 'manage-line'],
-        ],
-        logout_loading: false,
-        name: '',
-        avatar: '',
-    }),
+    data() {
+        return {
+            driver_management: [
+                ['录入新司机信息', 'mdi-plus-outline', 'add-driver-info'],
+                ['更新司机信息', 'mdi-update', 'update-driver'],
+                // ['删除司机', 'mdi-delete', 'delete-driver'],
+                ['录入违章信息', 'mdi-alert-octagon', 'add-violation'],
+            ],
+            user_id: '',
+            data_query: [
+                ['司机信息', 'mdi-information', 'driver-detail'],
+                ['违章统计', 'mdi-numeric', 'violation-statistic']
+            ],
+            line_manage: [
+                ['管理站点', 'mdi-bus-stop', 'manage-bus-stop'],
+                ['线路修改', 'mdi-road-variant', 'manage-line'],
+            ],
+            logout_loading: false,
+            name: '',
+            avatar: '',
+            drawer: true
+        }
+    },
     components: { RouterView },
 
     created() {
@@ -126,6 +130,9 @@ export default {
     },
     mounted() {
         this.fetchUserInfo()
+        if (!this.$vuetify.display.smAndUp) {
+            this.drawer = false
+        }
     }
 }
 </script>

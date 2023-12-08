@@ -12,12 +12,12 @@
                 <div class="text-subtitle-2 font-weight-black mb-1">车牌号</div>
                 <v-form validate-on="submit lazy" @submit.prevent="submit">
                     <v-text-field density="compact" v-model="bus_id" :counter="15" label="车牌号" :rules="busIdRules" requried
-                        variant="outlined">
+                        variant="outlined" color="blue">
                     </v-text-field>
 
                     <div class="text-subtitle-2 font-weight-black mb-1">路线编号</div>
                     <v-combobox label="请选择路线" height="1" density="compact" width="300" variant="outlined" :items="lineItems"
-                        :hide-no-data="false" v-model="choosedLine" :rules="lineRules">
+                        :hide-no-data="false" v-model="choosedLine" color="blue" :rules="lineRules">
                         <template v-slot:no-data>
                             <v-list-item>
                                 <v-list-item-title>

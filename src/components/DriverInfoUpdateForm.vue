@@ -4,7 +4,7 @@
         <v-card-text>你好，请按照相关要求更新司机信息</v-card-text>
         <v-card-text>
             <div class="text-subtitle-2 font-weight-black mb-1">司机</div>
-            <v-combobox label="请选择司机" density="compact" variant="outlined" :items="driverItems" :hide-no-data="false"
+            <v-combobox label="请选择司机" density="compact" :color="formColor" variant="outlined" :items="driverItems" :hide-no-data="false"
                 v-model="choosedDriver">
                 <template v-slot:no-data>
                     <v-list-item>
@@ -15,12 +15,12 @@
                 </template>
             </v-combobox>
             <div class="text-subtitle-2 font-weight-black mb-1">司机姓名</div>
-            <v-text-field density="compact" v-model="name" :counter="15" label="姓名" hint="姓名在15个字符以内" variant="outlined"
+            <v-text-field density="compact" v-model="name" :color="formColor" :counter="15" label="姓名" hint="姓名在15个字符以内" variant="outlined"
                 :disabled="shouldFormDisabled">
             </v-text-field>
 
             <div class="text-subtitle-2 font-weight-black mb-1">车队编号</div>
-            <v-combobox :disabled="shouldFormDisabled" density="compact" variant="outlined" :items="fleetsItems"
+            <v-combobox :disabled="shouldFormDisabled" :color="formColor" density="compact" variant="outlined" :items="fleetsItems"
                 :hide-no-data="false" v-model="fleet">
                 <template v-slot:no-data>
                     <v-list-item>
@@ -38,7 +38,7 @@
 
 
             </div>
-            <v-combobox density="compact" :disabled="shouldFormDisabled" variant="outlined" :items="lineItems"
+            <v-combobox density="compact" :color="formColor" :disabled="shouldFormDisabled" variant="outlined" :items="lineItems"
                 :hide-no-data="false" v-model="line">
                 <template v-slot:no-data>
                     <v-list-item>
@@ -106,6 +106,7 @@ export default {
             fleetsItems: [],
             fleet: null,
             alertType: "",
+            formColor:'blue',
 
         }
     },

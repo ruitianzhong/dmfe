@@ -19,7 +19,7 @@
                             :rules="userIdRules" density="compact"></v-text-field>
                         <p class="mb-2">选择车队</p>
                         <v-combobox height="1" density="compact" width="300" variant="outlined" :items="fleetItems"
-                            :hide-no-data="false" v-model="choosedFleet">
+                            :hide-no-data="false" v-model="choosedFleet" color="blue">
                             <template v-slot:no-data>
                                 <v-list-item>
                                     <v-list-item-title>
@@ -31,7 +31,7 @@
                         <p class="mb-2">新路线的站点</p>
                         <v-combobox v-model="choosedStops" v-model:search="search" :hide-no-data="false"
                             :items="stopIdItems" hide-selected hint="请按照路线的站点顺序选择" density="compact" multiple
-                            persistent-hint small-chips variant="outlined">
+                            persistent-hint small-chips variant="outlined" color="blue">
                             <template v-slot:no-data>
                                 <v-list-item>
                                     <v-list-item-title>

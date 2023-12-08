@@ -1,8 +1,18 @@
-# base
+# Driver Management Front End
+
+## About 
+
+This is a front end project(dmfe) for Bus Driver Management System which is the assignment of database course in Xidian University.
+
+[Vue](https://vuejs.org) & [Vuetify](https://vuetifyjs.com/) are used.
+
+[DMBE](https://github.com/ruitianzhong/dmbe) is the related project written in [Go](https://go.dev/) for back end .
+
+Copyright © 2023-Present [Ruitian Zhong](https://zrt.ink)
 
 ## Project setup
 
-```
+```)
 # yarn
 yarn
 

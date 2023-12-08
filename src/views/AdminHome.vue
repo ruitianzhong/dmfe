@@ -3,9 +3,12 @@
 
 
 
-  <div class="font-weight-bold text-center mt-10 mb-10" style="font-size:xx-large;margin-top: 400px;">
-    <v-img src="@/assets/logo-large.png" height="50px"></v-img>
-    欢迎使用公交司机管理系统
+  <div class="font-weight-bold text-center mt-10 mb-8" style="font-size:40px;margin-top: 400px;">
+    <v-img src="@/assets/logo-large.png" height="50px" class="mb-5"></v-img>
+
+    <p :class="$vuetify.display.smAndUp ? 'headline' : 'text-h5 font-weight-bold'">
+      欢迎使用公交管理系统
+    </p>
   </div>
 
   <v-container class="fill-height">

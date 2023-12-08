@@ -12,7 +12,7 @@
         </v-list-item>
         <h2 class="ml-4" style="text-align: left;font-weight: 500;">修改密码</h2>
         <v-divider class="ml-3 mt-2 mr-6"></v-divider>
-        <div class="mt-5 ml-5" style="width: 400px;">
+        <div class="mt-5 ml-5" style=";max-width: 400px;">
             <p class="mb-2 ">原密码</p>
             <v-text-field v-model="oldPassword" type="password" variant="outlined" color="blue" bg-color="white"
                 density="compact"></v-text-field>

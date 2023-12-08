@@ -11,10 +11,10 @@
             <v-card-text>
                 <div class="text-subtitle-2 font-weight-black mb-1 mt-3">车队号</div>
                 <v-form validate-on="submit lazy" @submit.prevent="submit">
-                    <v-text-field density="compact" v-model="bus_id" :counter="15" requried variant="outlined">
+                    <v-text-field density="compact" color="blue" v-model="bus_id" :counter="15" requried variant="outlined">
                     </v-text-field>
                     <div class="text-subtitle-2 font-weight-black mb-1">指定车队队长（车队队长将会转入新建立的车队中）</div>
-                    <v-combobox density="compact" variant="outlined" label="选填" :items="driverItems" :hide-no-data="false"
+                    <v-combobox density="compact" variant="outlined" color="blue" label="选填" :items="driverItems" :hide-no-data="false"
                         v-model="choosedDriver" >
                         <template v-slot:no-data>
                             <v-list-item>

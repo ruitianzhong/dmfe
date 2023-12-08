@@ -24,18 +24,22 @@
                 <div class="py-5" />
                 <v-row class="d-flex align-center justify-center">
                     <v-col cols="auto">
-                        <v-btn color="#07C160" min-width="300" to="/login" size="x-large" variant="flat">
+                        <v-btn color="#07C160" min-width="200" height="50" max-width="300" width="200" to="/login"
+                            size="x-large" variant="flat">
                             <v-icon icon="mdi-login" size="large" start />
                             登录
                         </v-btn>
                     </v-col>
-                    <v-col cols="auto">
-
+                    <v-col cols="1">
+                        <v-spacer></v-spacer>
                     </v-col>
-                    <v-btn color="#EDEDED" min-width="300" to="/signup" size="x-large" variant="flat">
-                        <v-icon icon="mdi-account-plus" size="large" start />
-                        注册
-                    </v-btn>
+                    <v-col cols="auto">
+                        <v-btn color="#EDEDED" min-width="200" height="50" max-width="300" position="relative" to="/signup"
+                            size="x-large" variant="flat">
+                            <v-icon icon="mdi-account-plus" size="large" start />
+                            注册
+                        </v-btn>
+                    </v-col>
                 </v-row>
             </v-responsive>
         </v-container>

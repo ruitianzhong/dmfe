@@ -210,7 +210,7 @@ export default defineComponent({
     <br />
     <v-row class="d-flex pe-2 text-center ml-10" justify="center">
         <v-col cols="5">
-            <v-combobox label="请选择车队" height="1" density="compact" width="300" variant="outlined" :items="fleetItems"
+            <v-combobox color="blue" label="请选择车队" height="1" density="compact" width="300" variant="outlined" :items="fleetItems"
                 :hide-no-data="false" v-model="choosedFleet">
                 <template v-slot:no-data>
                     <v-list-item>
