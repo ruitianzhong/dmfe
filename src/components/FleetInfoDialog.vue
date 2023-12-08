@@ -143,6 +143,7 @@ export default {
                 this.fetchAvailableDriverForFleetCaptain()
             } else {
                 this.alert = false;
+                this.$emit('refresh')
             }
         }
     }

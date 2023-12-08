@@ -44,7 +44,6 @@ export default defineComponent({
                     }
                 }, { dom: '123' });
                 vchart.renderAsync();
-                // chart.renderAsync();
                 return true;
             } else if (vchart) {
                 vchart.updateSpec({
@@ -209,9 +208,9 @@ export default defineComponent({
     </v-app-bar>
     <br />
     <v-row class="d-flex pe-2 text-center ml-10" justify="center">
-        <v-col cols="5">
-            <v-combobox color="blue" label="请选择车队" height="1" density="compact" width="300" variant="outlined" :items="fleetItems"
-                :hide-no-data="false" v-model="choosedFleet">
+        <v-col cols="4">
+            <v-combobox color="blue" label="请选择车队" height="1" density="compact" width="300" variant="outlined"
+                :items="fleetItems" :hide-no-data="false" v-model="choosedFleet">
                 <template v-slot:no-data>
                     <v-list-item>
                         <v-list-item-title>
@@ -221,11 +220,11 @@ export default defineComponent({
                 </template>
             </v-combobox>
         </v-col>
-        <v-col cols="5">
+        <v-col cols="4">
             <VueDatePicker v-model="date" range placeholder="请选择查询的时间范围" :max-date="new Date()" locale="zh-cn" />
         </v-col>
         <v-col cols="2">
-            <v-btn text="查询" variant="flat" color="#07C160" prepend-icon="mdi-magnify" @click="query()"
+            <v-btn text="查询" variant="flat" min-width="100" color="#07C160" prepend-icon="mdi-magnify" @click="query()"
                 :disabled="!(choosedFleet != null && date != null && date[0] != undefined && date[1] != undefined)"></v-btn>
         </v-col>
     </v-row>

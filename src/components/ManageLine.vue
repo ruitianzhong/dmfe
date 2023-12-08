@@ -77,7 +77,7 @@ export default {
                 this.loading = true;
                 const { data } = await getAllLineInfo();
                 var arr = data.all_info;
-                for (var i = 0; i < arr.length; i++) {
+                for (var i = 0; arr != null && i < arr.length; i++) {
                     if (arr[i].driver_id == '') {
                         arr[i].driver_id = "空缺"
                     }

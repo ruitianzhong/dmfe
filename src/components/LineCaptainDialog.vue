@@ -115,6 +115,7 @@ export default {
                 this.fetchAvailableDriver()
             } else {
                 this.$emit("refresh")
+                this.alert = false
             }
         }
     }

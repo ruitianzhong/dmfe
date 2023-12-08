@@ -5,7 +5,7 @@
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" density="compact" label="搜索" single-line flat
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
-            <AddNewStopDialog></AddNewStopDialog>
+            <AddNewStopDialog @refresh="updateStops()"></AddNewStopDialog>
             <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
                 rounded></v-btn>
             &nbsp;
@@ -60,6 +60,7 @@ export default {
                 this.loading = true;
                 const { data } = await getAllStops();
                 var arr = data.stop_ids;
+                this.items = []
                 for (var i = 0; i < arr.length; i++) {
                     var e = {
                         stop_id: arr[i],

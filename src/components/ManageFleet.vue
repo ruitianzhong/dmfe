@@ -15,7 +15,7 @@
             items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
-                    <FleetInfoDialog :fleet_id="item.fleet_id"></FleetInfoDialog>
+                    <FleetInfoDialog @refresh="fetchFleetDetailedInfo()" :fleet_id="item.fleet_id"></FleetInfoDialog>
                 </div>
             </template>
 
@@ -81,7 +81,7 @@ export default {
                 const { data } = await getAllFleetDetailedInfo()
                 var info = data.fleets_info
                 this.items = []
-                for (var i = 0; i < info.length; i++) {
+                for (var i = 0; info != null && i < info.length; i++) {
                     var e = {
                         fleet_id: info[i].fleet_id,
                         captain_name: info[i].has_captain ? info[i].captain_name : '空缺',
