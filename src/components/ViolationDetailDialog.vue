@@ -13,7 +13,7 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-list-item prepend-avatar="https://cdn.vuetifyjs.com/images/john.png" :title="violationInfo.name"
+                    <v-list-item :prepend-avatar="avatar" :title="violationInfo.name"
                         :subtitle="'工号 ' + violationInfo.driver_id" lines="two" append-icon="mdi-bus-side">
                     </v-list-item>
                     <v-list-item prepend-icon="mdi-road" title="时间"
@@ -46,7 +46,7 @@ export default {
     data() {
         return {
             dialog: false,
-            loading:false,
+            loading: false,
             year: '1990',
             gender: '男',
             fleet_id: '12345',
@@ -55,6 +55,7 @@ export default {
             end: null,
             date: null,
             alert: false,
+            avatar: ''
         }
     },
     onMounted() {
@@ -77,11 +78,20 @@ export default {
             } else {
                 this.$emit("success")
             }
-            this.loading= false;
+            this.loading = false;
             this.dialog = false;
         }
 
     },
+    watch:{
+        dialog(nv){
+            if (nv){
+                this.avatar = "https://api.multiavatar.com/" + this.violationInfo.driver_id + ".png"
+            }else {
+                this.avatar = ''
+            }
+        }
+    }
 
 }
 </script>

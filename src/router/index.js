@@ -29,11 +29,6 @@ const routes = [
     component: () => import('@/layouts/admin/SideBarNavigation.vue'),
     children: [
       {
-        path: '',
-        name: 'home-default',
-        component: () => import('@/views/AdminHome.vue')
-      },
-      {
         path: 'account',
         name: 'account',
         component: () => import('@/views/AdminAccount.vue'),

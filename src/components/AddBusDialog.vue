@@ -5,7 +5,7 @@
         </template>
         <v-card>
             <v-card-title>
-                <span class="py-5 font-weight-black">添加新的站点</span>
+                <span class="py-5 font-weight-black">添加新的车辆</span>
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
@@ -27,7 +27,7 @@
                         </template>
                     </v-combobox>
                     <v-btn type="submit" :loading="loading" block class="text-none mb-4" color="indigo-darken-3"
-                        size="x-large" variant="flat" :disabled="choosedLine == null || bus_id == null">
+                        size="x-large" variant="flat" :disabled="choosedLine == null || bus_id == null || bus_id==''">
                         确认
                     </v-btn>
                     <v-alert :type="reply.type" closable v-model="alert" :title="reply.title" variant="outlined"
@@ -121,6 +121,7 @@ export default {
             try {
                 const { data } = await getAllLineInfo()
                 const arr = data.all_info;
+                this.lineItems = []
                 for (var i = 0; i < arr.length; i++) {
                     this.lineItems.push(arr[i].line_id)
                 }

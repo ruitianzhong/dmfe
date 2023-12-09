@@ -66,7 +66,7 @@
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn :disabled="loading" prepend-icon="mdi-refresh" block class="text-none mb-4"
+                    <v-btn :disabled="this.choosedDriver == null" prepend-icon="mdi-refresh" block class="text-none mb-4"
                         color="green-lighten-1" size="x-large" variant="flat">
                         恢复
                     </v-btn>
@@ -132,11 +132,11 @@ export default {
                         line_id: arr[i].line_id,
                         fleet_id: arr[i].fleet_id,
                         name: arr[i].name,
-                        title: arr[i].name,
+                        title: arr[i].driver_id,
                         gender: arr[i].gender,
                         year: arr[i].year,
                         props: {
-                            subtitle: "工号 " + arr[i].driver_id + " 车队 " + arr[i].fleet_id,
+                            subtitle: "姓名 " + arr[i].name + " 车队 " + arr[i].fleet_id,
                         }
                     }
                     this.driverItems.push(e)
@@ -208,7 +208,7 @@ export default {
                 try {
                     const { data } = await getLineByFleetId(param)
                     var arr = data.line_id;
-                    for (var i = 0; i < arr.length; i++) {
+                    for (var i = 0; arr != null && i < arr.length; i++) {
                         var e = {
                             title: arr[i],
                             line_id: arr[i]

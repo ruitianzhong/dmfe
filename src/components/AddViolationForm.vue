@@ -112,9 +112,9 @@ export default {
                 for (var i = 0; i < arr.length; i++) {
                     var item = {
                         driver_id: arr[i].driver_id,
-                        title: arr[i].name,
+                        title:  arr[i].name+' ('+arr[i].driver_id+')' ,
                         props: {
-                            subtitle: '工号 ' + arr[i].driver_id + ' 车队 ' + arr[i].fleet_id
+                            subtitle: '车队 ' + arr[i].fleet_id
                         },
                         line_id: arr[i].line_id,
                         name: arr[i].name

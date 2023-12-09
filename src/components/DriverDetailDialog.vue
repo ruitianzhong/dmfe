@@ -116,6 +116,7 @@ export default {
                 var param = "driver_id=" + this.driver_info.driver_id + '&start=' + start + '&end=' + end;
                 const { data } = await violationByTimeRangeDriverId(param);
                 var violations = data.violations;
+                this.violation_items = []
                 for (var i = 0; violations != null && i < violations.length; i++) {
                     var d = new Date(violations[i].time * 1000)
                     var violation = {

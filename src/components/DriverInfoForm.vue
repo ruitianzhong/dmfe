@@ -103,6 +103,7 @@ export default {
 
                 const { data } = await getAllFleet()
                 var arr = data.fleet_ids;
+                this.fleetsItems = []
                 for (var i = 0; i < arr.length; i++) {
                     var e = {
                         fleet_id: arr[i],

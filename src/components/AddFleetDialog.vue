@@ -98,7 +98,7 @@ export default {
                 this.loading = true
                 const {data} =await addNewFleet(param)
                 if (data.code=="200"){
-                    this.reply.msg ="成功建立车队"
+                    this.reply.msg ="成功建立 "+ param.fleet_id
                     this.reply.type="success"
                 }else{
                     this.reply.msg=data.msg
