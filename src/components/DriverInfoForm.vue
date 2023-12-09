@@ -111,7 +111,6 @@ export default {
                     }
                     this.fleetsItems.push(e)
                 }
-                console.log(data)
             } catch (err) {
                 console.log(err);
             }

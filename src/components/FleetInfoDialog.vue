@@ -89,7 +89,6 @@ export default {
             try {
                 this.driverItems = []
                 const { data } = await getFleetMembers(param)
-                console.log(data, param)
                 const members = data.fleet_members
                 for (var i = 0; i < members.length; i++) {
                     var e = {
@@ -118,7 +117,6 @@ export default {
                 fleet_id: this.fleet_id,
                 driver_id: this.choosedDriver.driver_id
             }
-            console.log(param)
             this.loading = true
             try {
                 const { data } = await setFleetCaptain(param)

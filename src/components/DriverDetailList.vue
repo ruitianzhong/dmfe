@@ -42,6 +42,10 @@ export default {
                     key: 'name',
                 },
                 {
+                    title: '所在车队',
+                    key: 'fleet_id'
+                },
+                {
                     title: '性别',
                     key: 'gender'
                 },
@@ -62,7 +66,6 @@ export default {
         async getItems() {
             try {
                 this.loading = true;
-                console.log("test")
                 const { data } = await getAllDriverInfo();
                 this.items = data.driver_info;
                 this.loading = false;

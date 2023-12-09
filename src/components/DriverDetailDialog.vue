@@ -10,8 +10,8 @@
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-list-item :prepend-avatar="avatarUrl" :title="driver_info.name"
-                    :subtitle="'工号 ' + driver_info.driver_id" lines="two" append-icon="mdi-bus-side">
+                <v-list-item :prepend-avatar="avatar" :title="driver_info.name" :subtitle="'工号 ' + driver_info.driver_id"
+                    lines="two" append-icon="mdi-bus-side">
                 </v-list-item>
                 <v-list-item prepend-icon="mdi-calendar" title="出生年份" :subtitle="driver_info.year"></v-list-item>
 
@@ -19,7 +19,7 @@
                 <v-list-item prepend-icon="mdi-counter" title="所属车队编号" :subtitle="driver_info.fleet_id"></v-list-item>
 
                 <v-skeleton-loader v-if="loading" type="list-item-two-line"></v-skeleton-loader>
-                <v-list-item prepend-icon="mdi-account-box" title="车队队长" v-else
+                <v-list-item prepend-icon="mdi-account-box" title="线路队长" v-else
                     :subtitle="this.fleet_captain.driver_id != '' ? this.fleet_captain.name + ' ' + this.fleet_captain.driver_id : '该车队暂时没有队长'"></v-list-item>
                 <v-list-item prepend-icon="mdi-road" title="路线"
                     :subtitle="driver_info.line_id != '' ? driver_info.line_id : '暂未分配路线'"></v-list-item>
@@ -80,7 +80,8 @@ export default {
             fleet_captain: {
                 driver_id: '',
                 name: '',
-            }
+            },
+            avatar: ''
         }
     },
     onMounted() {
@@ -91,6 +92,7 @@ export default {
                 this.loading = true;
                 this.getLineCaptain();
                 this.loading = false;
+                this.avatar = "https://api.multiavatar.com/" + this.driver_info.driver_id + ".png"
             }
         }
     },
@@ -131,13 +133,7 @@ export default {
                 console.log(err);
             }
         },
-        computed:{
-            avatarUrl() {
-                return "https://api.multiavatar.com/" + this.driver_info.driver_id + '.png'
-            }
-        }
-
-    }
+    },
 
 }
 </script>

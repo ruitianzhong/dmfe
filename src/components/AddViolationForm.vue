@@ -5,8 +5,8 @@
         <v-card-text>
             <div class="text-subtitle-2 font-weight-black mb-1">司机</div>
             <v-form validate-on="submit lazy" @submit.prevent="submit">
-                <v-combobox label="请选择司机" color="blue" density="compact" variant="outlined" :items="driverItems" :hide-no-data="false"
-                    v-model="choosedDriver">
+                <v-combobox label="请选择司机" color="blue" density="compact" variant="outlined" :items="driverItems"
+                    :hide-no-data="false" v-model="choosedDriver">
                     <template v-slot:no-data>
                         <v-list-item>
                             <v-list-item-title>
@@ -112,7 +112,7 @@ export default {
                 for (var i = 0; i < arr.length; i++) {
                     var item = {
                         driver_id: arr[i].driver_id,
-                        title:  arr[i].name+' ('+arr[i].driver_id+')' ,
+                        title: arr[i].name + ' (' + arr[i].driver_id + ')',
                         props: {
                             subtitle: '车队 ' + arr[i].fleet_id
                         },
@@ -178,7 +178,7 @@ export default {
                 var { data } = await getStopsByLineId(param);
                 this.violationStops = [];
                 var arr = data.stop_ids
-                for (var i = 0; i < arr.length; i++) {
+                for (var i = 0; arr != null && i < arr.length; i++) {
                     const e = {
                         stop_id: arr[i],
                         title: arr[i]

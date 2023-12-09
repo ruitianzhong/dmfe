@@ -63,7 +63,7 @@ export default {
                     this.reply.msg = "成功添加车辆 " + param.stop_id
                 } else {
                     this.reply.type = "error"
-                    this.reply.msg = "车辆" + param.stop_id + "已经存在"
+                    this.reply.msg = "站点" + param.stop_id + "已经存在"
                 }
                 this.alert = true
             } catch (err) {

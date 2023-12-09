@@ -72,7 +72,6 @@ export default {
                 const { data } = await checkIfLogin()
                 if (data.code == "200") {
                     router.push("/admin/home")
-                    console.log(data.code)
                 }
             } catch (err) {
                 console.log(err)
