@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import AddViolationForm from '@/components/AddViolationForm.vue';
+import AddViolationForm from '@/components/violation/AddViolationForm.vue';
 </script>

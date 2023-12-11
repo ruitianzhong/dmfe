@@ -24,8 +24,8 @@
 </template>
       
 <script>
-import AddFleetDialog from '@/components/AddFleetDialog.vue';
-import FleetInfoDialog from '@/components/FleetInfoDialog.vue'
+import AddFleetDialog from '@/components/fleet/AddFleetDialog.vue';
+import FleetInfoDialog from '@/components/fleet/FleetInfoDialog.vue'
 import { getAllFleetDetailedInfo } from '@/api/api';
 export default {
     components: {

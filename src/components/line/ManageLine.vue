@@ -5,7 +5,7 @@
             <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" density="compact" label="搜索" single-line flat
                 hide-details variant="solo-filled"></v-text-field>
             <v-spacer></v-spacer>
-            <AddNewStopDialog @refresh="updateStops()"></AddNewStopDialog>
+            <AddNewLineDialog @refresh="updateLineInfo"></AddNewLineDialog>
             <v-btn icon="mdi-refresh" @click="refresh()" :loading="refresh_loading" class="ml-3" variant="flat"
                 rounded></v-btn>
             &nbsp;
@@ -15,8 +15,11 @@
             items-per-page-text="每页显示记录数量" :headers="headers" hover loading-text="数据加载中,请稍等">
             <template v-slot:item.detail="{ item }">
                 <div class="text-end">
-                    <StopInfoDialog :stop_id="item.stop_id"></StopInfoDialog>
+                    <LineInfoDialog :line_id="item.line_id"></LineInfoDialog>
                 </div>
+            </template>
+            <template v-slot:item.modify="{ item }">
+                <LineCaptainDialog :line_id="item.line_id" @refresh="refresh()"></LineCaptainDialog>
             </template>
 
         </v-data-table>
@@ -24,24 +27,41 @@
 </template>
       
 <script>
-import AddNewStopDialog from '@/components/AddNewStopDialog.vue';
-import StopInfoDialog from '@/components/StopInfoDialog.vue'
-import { getAllStops } from '@/api/api';
+import AddNewLineDialog from './AddNewLineDialog.vue';
+import LineInfoDialog from './LineInfoDialog.vue'
+import LineCaptainDialog from './LineCaptainDialog.vue';
+import { getAllLineInfo } from '@/api/api';
 export default {
     components: {
-        AddNewStopDialog,
-        StopInfoDialog,
+        AddNewLineDialog,
+        LineInfoDialog,
+        LineCaptainDialog,
     },
     data() {
         return {
             loading: false,
+            refresh_loading: false,
             search: '',
             items: [],
             headers: [
                 {
-                    title: '站名',
-                    key: 'stop_id',
+                    title: '路线名',
+                    key: 'line_id',
                     align: 'start',
+                },
+                {
+                    title: '所属车队',
+                    key: 'fleet_id',
+                },
+
+                {
+                    title: '路队长工号',
+                    key: 'driver_id'
+                },
+                {
+                    title: '更新',
+                    key: 'modify',
+
                 },
                 {
                     title: '更多',
@@ -49,41 +69,35 @@ export default {
                     align: 'end'
                 },
             ],
-            selected: [],
-            refresh_loading: false,
-
         }
     },
     methods: {
-        async updateStops() {
+        async updateLineInfo() {
             try {
                 this.loading = true;
-                const { data } = await getAllStops();
-                var arr = data.stop_ids;
-                this.items = []
-                for (var i = 0; i < arr.length; i++) {
-                    var e = {
-                        stop_id: arr[i],
+                const { data } = await getAllLineInfo();
+                var arr = data.all_info;
+                for (var i = 0; arr != null && i < arr.length; i++) {
+                    if (arr[i].driver_id == '') {
+                        arr[i].driver_id = "空缺"
                     }
-                    this.items.push(e);
                 }
-                this.loading = false;
-                return;
-
-            } catch (err) {
+                this.items = arr
+            }
+            catch (err) {
                 console.log(err)
             }
             this.loading = false;
+
         },
         refresh() {
             this.refresh_loading = true;
-            this.updateStops()
+            this.updateLineInfo()
             this.refresh_loading = false;
         }
-
     },
     mounted() {
-        this.updateStops();
+        this.updateLineInfo();
     }
 }
 </script>

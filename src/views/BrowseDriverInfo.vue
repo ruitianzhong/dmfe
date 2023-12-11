@@ -2,5 +2,5 @@
 <DriverDetailList/>
 </template>
 <script setup>
-import DriverDetailList from '@/components/DriverDetailList.vue';
+import DriverDetailList from '@/components/driver/DriverDetailList.vue';
 </script>

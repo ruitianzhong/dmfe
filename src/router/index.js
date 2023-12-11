@@ -76,16 +76,16 @@ const routes = [
       {
         path:"manage-bus-stop",
         name:"manage-bus-stop",
-        component:()=> import('@/components/ManageBusStop.vue')
+        component:()=> import('@/components/line/ManageBusStop.vue')
       },
       {
         path:"manage-line",
         name:"manage-line",
-        component:()=>import('@/components/ManageLine.vue')
+        component:()=>import('@/components/line/ManageLine.vue')
       },
       {
         path:"fleet-management",
-        component:()=>import('@/components/ManageFleet.vue')
+        component:()=>import('@/components/fleet/ManageFleet.vue')
       }
     ]
   }

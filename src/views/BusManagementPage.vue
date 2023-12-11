@@ -2,5 +2,5 @@
 <BusManagement/>
 </template>
 <script setup>
-import BusManagement from '@/components/BusManagement.vue'
+import BusManagement from '@/components/bus/BusManagement.vue'
 </script>

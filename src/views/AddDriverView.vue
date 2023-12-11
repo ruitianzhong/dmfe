@@ -4,5 +4,5 @@
 </template>
 
 <script setup>
-import DriverInfoForm from '@/components/DriverInfoForm.vue'
+import DriverInfoForm from '@/components/driver/DriverInfoForm.vue'
 </script>
