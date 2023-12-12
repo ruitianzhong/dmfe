@@ -71,6 +71,18 @@ export default {
                     align: 'start',
                 },
                 {
+                    title:"车牌号",
+                    key:"bus_id",
+                },
+                {
+                    title:"线路",
+                    key:"line_id"
+                },
+                {
+                    title: "违章站点",
+                    key:"stop_id"
+                },
+                {
                     title: '违章种类',
                     key: 'violation_type_id',
                     align: 'end'
@@ -123,7 +135,11 @@ export default {
                     var d = new Date(violations[i].time * 1000)
                     var violation = {
                         violation_type_id: violations[i].violation_type_id,
-                        time: d.getFullYear() + "." + d.getMonth() + '.' + d.getDay() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds()
+                        time: d.getFullYear() + "." + d.getMonth() + '.' + d.getDay() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds(),
+                        driver_id:violations[i].driver_id,
+                        stop_id :violations[i].stop_id,
+                        line_id:violations[i].line_id,
+                        bus_id:violations[i].bus_id,
                     };
                     this.violation_items.push(violation);
                 }
