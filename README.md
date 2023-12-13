@@ -10,6 +10,25 @@ This is a front end project(dmfe) for Bus Driver Management System which is the 
 
 Copyright © 2023-Present [Ruitian Zhong](https://zrt.ink)
 
+
+## Configuration
+
+### API baseURL
+
+Modify the axios.defaults.baseURL in [api/config.js](./src/api/config.js) according to your need.
+
+For example, if you are using https://example.com for [DMBE](https://github.com/ruitianzhong/dmbe),
+you can configure defaults.baseURL like this
+
+```javascript
+axios.defaults.baseURL = 'https://example.com';
+```
+
+If you are just testing on your machine, and [DMBE](https://github.com/ruitianzhong/dmbe) has been set up on your machine which is listening on port 8080, you can configure like this:
+
+```javascript
+axios.defaults.baseURL = 'http://localhost:8080';
+```
 ## Project setup
 
 ```)
